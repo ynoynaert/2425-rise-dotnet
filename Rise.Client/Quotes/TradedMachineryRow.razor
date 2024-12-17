@@ -1,0 +1,47 @@
+﻿<Table Borderless Responsive>
+    <TableBody>
+        <TableRowGroup Title="@($"{Trade.Name} - € {Trade.EstimatedValue:N2}")">
+            <TableRow>
+                <TableRowCell>
+                    <div class="row">
+                        <div class="col-md-6 mb-1">
+                            <div class="traded-machine-detail-left">
+                                <h6 class="text-bold">Naam:</h6>
+                                <p>@Trade.Name</p>
+
+                                <h6 class="text-bold">Serienummer:</h6>
+                                <p>@Trade.SerialNumber</p>
+
+                                <h6 class="text-bold">Type:</h6>
+                                <p>@Trade.MachineryType.Name</p>
+
+                                <h6 class="text-bold">Jaar:</h6>
+                                <p>@Trade.Year</p>
+
+                                <h6 class="text-bold">Geschatte waarde:</h6>
+                                <p>€ @string.Format("{0:N2}", Trade.EstimatedValue)</p>
+
+                                <h6 class="text-bold">Beschrijving:</h6>
+                                <p>@Trade.Description</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-1">
+                            <div class="machine-detail-gallery">
+                                <div class="selected-image">
+                                    <img src="@SelectedImage" alt="Selected Image" class="main-image" />
+                                </div>
+                                <div class="thumbnail-gallery">
+                                    @foreach (var img in Trade.Images)
+                                    {
+                                        <img src="@img.Url" alt="Thumbnail" class="thumbnail" @onclick="(() => SelectImage(img.Url))" />
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </TableRowCell>
+            </TableRow>
+        </TableRowGroup>
+    </TableBody>
+</Table>

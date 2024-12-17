@@ -1,0 +1,10 @@
+﻿.quote-add-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+    .quote-add-title h3 {
+        flex-grow: 1;
+    }

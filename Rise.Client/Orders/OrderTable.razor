@@ -1,0 +1,93 @@
+﻿<div class="filters-box">
+    <input @bind="Query!.Search" @bind:after="PerformFilter" class="filters textfield" placeholder="Zoek op naam of nummer" />
+
+    <div class="datepicker">
+        <Addons>
+            <Addon AddonType="AddonType.Body">
+                <DatePicker Placeholder="Zoeken vanaf" @ref="@datePickerAfter" TValue="DateTime?" @bind-Date="Query.After" @bind-Date:after="PerformFilter" InputFormat="yyyy-MM-dd" DisplayFormat="yyyy-MM-dd" />
+            </Addon>
+            <Addon AddonType="AddonType.End">
+                <Button Color="Color.Secondary" Clicked="@(() => datePickerAfter.ToggleAsync())">
+                    <Icon Name="IconName.CalendarDay" />
+                </Button>
+            </Addon>
+        </Addons>
+    </div>
+    <div class="datepicker">
+        <Addons>
+            <Addon AddonType="AddonType.Body">
+                <DatePicker Placeholder="Zoeken tot" @ref="@datePickerBefore" TValue="DateTime?" @bind-Date="Query.Before" @bind-Date:after="PerformFilter" InputFormat="yyyy-MM-dd" DisplayFormat="yyyy-MM-dd" />
+            </Addon>
+            <Addon AddonType="AddonType.End">
+                <Button Color="Color.Secondary" Clicked="@(() => datePickerBefore.ToggleAsync())">
+                    <Icon Name="IconName.CalendarDay" />
+                </Button>
+            </Addon>
+        </Addons>
+    </div>
+
+    <select @bind="Query.SortBy" @bind:after="PerformFilter" class="filters" aria-label="Sorting">
+        <option value="" selected>Sorteren op</option>
+        <option value="OrderNumber">Offertenummer</option>
+        <option value="Date">Datum</option>
+        <option value="CustomerName">Klantnaam</option>
+        <option value="MachineryName">Machinenaam</option>
+    </select>
+
+    <select @bind="Query.Status" @bind:after="PerformFilter" class="filters">
+        <option value="" selected>Alle statusen</option>
+        <option value="Actief">Actieve bestellingen</option>
+        <option value="Geannuleerd">Geannuleerde bestellingen</option>
+    </select>
+
+    <div class="filters">
+        <input type="checkbox" @bind="Query.IsDescending" @bind:after="PerformFilter" />
+        <label for="sortOrder">Aflopend</label>
+    </div>
+</div>
+
+<Table Striped Hoverable Responsive>
+    <TableHeader>
+        <TableRow>
+            <TableHeaderCell>Bestellingsnummer</TableHeaderCell>
+            <TableHeaderCell>Offertenummer</TableHeaderCell>
+            <TableHeaderCell>Datum</TableHeaderCell>
+            <TableHeaderCell>Machine</TableHeaderCell>
+            <TableHeaderCell>Klantnaam</TableHeaderCell>
+            <TableHeaderCell>Status</TableHeaderCell>
+        </TableRow>
+    </TableHeader>
+    <TableBody>
+        @if (Orders!.Count() == 0 )
+        {
+            <TableRow>
+                <TableRowCell colspan="6">Geen bestellingen gevonden</TableRowCell>
+            </TableRow>
+        }
+        else
+        {
+            @foreach (var order in Orders!)
+            {
+                <TableRow class='clickable' @onclick="() => NavigateToDetailPage(order.OrderNumber)">
+                    <TableRowCell>@order.OrderNumber</TableRowCell>
+                    <TableRowCell>@order.Quote.QuoteNumber</TableRowCell>
+                    <TableRowCell>@order.Date.ToString("dd/MM/yyyy")</TableRowCell>
+                    <TableRowCell>@order.Quote.Machinery.Name</TableRowCell>
+                    <TableRowCell>@order.Quote.Customer.Name</TableRowCell>
+                    <TableRowCell>@(order.IsCancelled ? "Geannuleerd" : "Actief")</TableRowCell>
+                </TableRow>
+            }
+        }
+    </TableBody>
+</Table>
+
+<div class="pagination">
+    <Blazorise.Pagination ItemsPerPage="@Query.PageSize" @bind-CurrentPage="Query.PageNumber">
+        <PaginationItem Disabled="@isPreviousDisabled">
+            <PaginationLink Clicked="OnPreviousPage">Vorige</PaginationLink>
+        </PaginationItem>
+        <PaginationItem Disabled="@isNextDisabled">
+            <PaginationLink Clicked="OnNextPage">Volgende</PaginationLink>
+        </PaginationItem>
+    </Blazorise.Pagination>
+</div>

@@ -1,0 +1,50 @@
+﻿@page "/machinetypes"
+@inject NavigationManager NavigationManager
+@using Rise.Client.Machineries.Components
+@attribute [Authorize(Roles = "Administrator")]
+
+
+<PageTitle>Types</PageTitle>
+
+<div class="d-flex justify-content-between align-items-center">
+    <h1>Types</h1>
+    <Button Color="Color.Primary" Margin="Margin.Is2.FromTop" Clicked="@OnButtonClicked">
+        <Icon Name="IconName.Add" /> Voeg type toe
+    </Button>
+</div>
+
+@if (MachineryTypes == null)
+{
+    <p><em>Laden...</em></p>
+}
+else
+{
+    <Table Striped Hoverable Responsive>
+        <TableHeader>
+            <TableRow>
+                <TableHeaderCell>Naam</TableHeaderCell>
+                <TableHeaderCell></TableHeaderCell>
+            </TableRow>
+        </TableHeader>
+        <TableBody>
+            @foreach (var MachineryType in MachineryTypes)
+            {
+                <TableRow>
+                    <TableRowCell>@MachineryType.Name</TableRowCell>
+                    <TableRowCell TextAlignment="TextAlignment.End">
+                        <Dropdown>
+                            <DropdownToggle>
+                                <Icon Name="IconName.MoreVertical" />
+                            </DropdownToggle>
+                            <DropdownMenu>
+                                <DropdownItem Clicked="@(() => Edit(MachineryType.Id))">Bewerken</DropdownItem>
+                                <DropdownItem Clicked="@(() => ShowDeleteConfirmation(MachineryType))">Verwijderen</DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
+                    </TableRowCell>
+                </TableRow>
+            }
+        </TableBody>
+    </Table>
+    <ConfirmationModal @ref="confirmationModal" Title="Bevestig verwijderen" OnConfirm="OnDeleteConfirmed" />
+}

@@ -1,0 +1,24 @@
+﻿.quote-add-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.quote-add-title h3 {
+    flex-grow: 1;
+}
+
+.boxButtons {
+    display: inline-flex;
+    flex-wrap: wrap;
+    margin: 10px;
+    align-self: end;
+}
+
+.headerBox {
+    display: inline-flex;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: space-between;
+}

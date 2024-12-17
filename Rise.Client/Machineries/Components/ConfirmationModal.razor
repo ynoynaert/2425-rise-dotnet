@@ -1,0 +1,19 @@
+﻿
+<div>
+	<Modal @ref="modalRef" Closing="@OnModalClosing" class="modal">
+		<ModalContent Centered>
+			<ModalHeader class="header-modal">
+				<ModalTitle>@Title</ModalTitle>
+			</ModalHeader>
+			<ModalBody>
+				@Message
+			</ModalBody>
+			<ModalFooter>
+				<Button Color="Color.Primary" @onclick="Confirm" id="yes-button">Ja</Button>
+				<Button @onclick="CloseModal" class="no-button">Nee</Button>
+			</ModalFooter>
+		</ModalContent>
+	</Modal>
+</div>
+
+

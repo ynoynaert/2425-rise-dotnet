@@ -1,0 +1,52 @@
+﻿<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+
+        <a href=""><img class="logo" src="/images/Logo.png" /> </a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="machines">
+                <span class="oi oi-grid-four-up" aria-hidden="true"></span> Machines
+            </NavLink>
+            <NavLink class="nav-link" href="offertes">
+                <span class="oi oi-grid-four-up" aria-hidden="true"></span> Offertes
+            </NavLink>
+            <NavLink class="nav-link" href="offertevoorstellen">
+				        <span class="oi oi-grid-four-up" aria-hidden="true"></span> Offertevoorstellen
+            </NavLink>
+            <NavLink class="nav-link" href="bestellingen">
+                <span class="oi oi-grid-four-up" aria-hidden="true"></span> Bestellingen
+            </NavLink>
+            <NavLink class="nav-link" href="categorieën">
+                <span class="oi oi-grid-four-up" aria-hidden="true"></span> Categorieën - opties
+            </NavLink>
+            <AuthorizeView Roles="Administrator">
+                <NavLink class="nav-link" href="machinetypes">
+                    <span class="oi oi-grid-four-up" aria-hidden="true"></span> Types
+                </NavLink>
+            </AuthorizeView>
+            <AuthorizeView Roles="Administrator">
+                <NavLink class="nav-link" href="vertalingen">
+                    <span class="oi oi-grid-four-up" aria-hidden="true"></span> Vertalingen
+                </NavLink>
+            </AuthorizeView>
+            <AuthorizeView Roles="Administrator">
+                <NavLink class="nav-link" href="verkopers">
+                    <span class="oi oi-grid-four-up" aria-hidden="true"></span> Verkopers
+                </NavLink>
+            </AuthorizeView>
+            <AuthorizeView Roles="Administrator">
+                <NavLink class="nav-link" href="vestigingen">
+                    <span class="oi oi-grid-four-up" aria-hidden="true"></span> Vestigingen
+                </NavLink>
+            </AuthorizeView>
+        </div>
+    </nav>
+</div>
+

@@ -1,0 +1,56 @@
+﻿.my-component {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.my-component ::deep .category-card {
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 5px;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+.my-component ::deep .category-card-body {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 5px;
+}
+
+
+@media screen and (max-width: 768px) {
+    .my-component ::deep .category-card {
+        width: 45%;
+        padding: 5px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .my-component ::deep .category-card {
+        width: 100%;
+        padding: 0px;
+    }
+}
+
+.filters {
+    width: 230px;
+    background-color: #f9fafb;
+    border: none;
+    border-radius: 5px;
+    height: 35px;
+    color: black;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 5px;
+}
+
+.headerBox {
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+}

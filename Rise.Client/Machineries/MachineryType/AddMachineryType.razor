@@ -1,0 +1,37 @@
+﻿@page "/machinetypes/toevoegen"
+@using Rise.Client.Machineries.Components
+@inject NavigationManager NavigationManager
+@attribute [Authorize(Roles="Administrator")]
+
+<PageTitle>Type toevoegen</PageTitle>
+
+<div class="type-add-title" style="gap: 10px;">
+    <Button class="back-button" Clicked="@(() => OnButtonClicked())">
+        <Icon Name="IconName.ArrowLeft" />
+    </Button>
+    <h3 class="mb-0">Type toevoegen</h3>
+</div>
+
+<div class="div-form">
+    <Card>
+        <CardBody>
+            @if (!string.IsNullOrEmpty(errorMessages))
+            {
+                <div class="alert alert-danger mt-3">@errorMessages</div>
+            }
+            <EditForm class="edit-form" Model="@Model" OnValidSubmit="@ValidateData">
+                <Validations @ref="@fluentValidations" HandlerType="typeof(FluentValidationHandler)" Mode="ValidationMode.Auto" Model="@Model">
+                    <Validation>
+                        <Field>
+                            <FieldLabel RequiredIndicator>Naam: </FieldLabel>
+                            <TextEdit @bind-Text="Model.Name" class="form-control" id="input-name" />
+                            <ValidationMessage For="() => Model!.Name" />
+                            <ValidationError />
+                        </Field>
+                    </Validation>
+                    <Button Type="ButtonType.Submit" class="btn btn-primary add-button">Toevoegen</Button>
+                </Validations>
+            </EditForm>
+        </CardBody>
+    </Card>
+</div>

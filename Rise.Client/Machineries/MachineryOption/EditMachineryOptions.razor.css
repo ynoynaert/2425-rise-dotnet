@@ -1,0 +1,28 @@
+﻿.div-form ::deep .card {
+    background-color: #EDEDED;
+    border: none;
+}
+.machine-edit-options-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.text-bold {
+    font-weight: bold;
+}
+
+::deep .gray-button {
+    background-color: lightgrey;
+}
+
+::deep .gray-button:hover {
+    background-color: dimgrey;
+}
+
+::deep .option-field{
+    margin:0px;
+}
+
+::deep .option-field-bewerken {
+    margin-bottom: 10px;
+}

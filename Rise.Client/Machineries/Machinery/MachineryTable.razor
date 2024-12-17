@@ -1,0 +1,72 @@
+﻿@using Rise.Shared.Machineries
+
+<div class="filters-box">
+    <input @bind="Query!.Search" @bind:after="PerformFilter" class="filters textfield" placeholder="Zoek op serienummer of naam" />
+
+
+    <DropdownList TItem="MachineryTypeDto.Index" TValue="int"
+                  Data="@MachineryTypeDtos"
+                  TextField="@((item) => item.Name)"
+                  ValueField="@((item) => item.Id)"
+                  @bind-SelectedValues="@filteredTypes"
+                  @bind-SelectedValues:after="PerformFilter"
+                  SelectionMode="DropdownListSelectionMode.Checkbox"
+                  Color="Color.Light"
+                  MaxMenuHeight="200px">
+        Selecteer type(s)
+    </DropdownList>
+
+
+    <select @bind="Query.SortBy" @bind:after="PerformFilter" class="filters" aria-label="Sorting">
+        <option value="" selected>Sorteren op</option>
+        <option value="Name">Naam</option>
+        <option value="Type">Type</option>
+        <option value="Serialnumber">Serienummer</option>
+    </select>
+
+
+    <div class="filters">
+        <input type="checkbox" @bind="Query.IsDescending" @bind:after="PerformFilter" />
+        <label for="sortOrder">Aflopend</label>
+    </div>
+</div>
+
+<Table Striped Hoverable Responsive>
+    <TableHeader>
+        <TableRow>
+            <TableHeaderCell style="width: 33%;">Naam</TableHeaderCell>
+            <TableHeaderCell style="width: 33%;">Serienummer</TableHeaderCell>
+            <TableHeaderCell style="width: 34%;">Type</TableHeaderCell>
+        </TableRow>
+    </TableHeader>
+    <TableBody>
+        @if (Machinery!.Count() == 0)
+        {
+            <TableRow>
+                <TableRowCell colspan="3">Geen machines gevonden</TableRowCell>
+            </TableRow>
+        }
+        else
+        {
+            @foreach (var item in Machinery!)
+            {
+                <TableRow class='clickable' @onclick="() => NavigateToDetailPage(item.Id)">
+                    <TableRowCell id="machinery-name">@item.Name</TableRowCell>
+                    <TableRowCell>@item.SerialNumber</TableRowCell>
+                    <TableRowCell>@item.Type.Name</TableRowCell>
+                </TableRow>
+            }
+        }
+    </TableBody>
+</Table>
+
+<div class="pagination">
+    <Blazorise.Pagination ItemsPerPage="@Query.PageSize" @bind-CurrentPage="Query.PageNumber">
+        <PaginationItem Disabled="@isPreviousDisabled">
+            <PaginationLink Clicked="OnPreviousPage">Vorige</PaginationLink>
+        </PaginationItem>
+        <PaginationItem Disabled="@isNextDisabled">
+            <PaginationLink Clicked="OnNextPage">Volgende</PaginationLink>
+        </PaginationItem>
+    </Blazorise.Pagination>
+</div>

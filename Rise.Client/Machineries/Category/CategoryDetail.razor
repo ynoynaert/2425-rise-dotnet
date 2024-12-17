@@ -1,0 +1,98 @@
+﻿@page "/categorieën/{id:int}"
+@using Rise.Client.Machineries.Components
+@inject NavigationManager NavigationManager
+@attribute [Authorize]
+
+@if (categoryDetail is null)
+{
+    @if (!string.IsNullOrEmpty(errorMessages))
+    {
+        <div class="alert alert-danger mt-3">
+            @errorMessages
+            <br/>
+            <Button class="back-button" Clicked="@(() => OnButtonClicked())">
+                <Icon Name="IconName.ArrowLeft" /> &nbsp;Ga terug
+            </Button>
+            </div>
+    }
+    else
+    {
+        <p>Loading category details...</p>
+    }
+}
+else
+{
+    <PageTitle>@categoryDetail.Name</PageTitle>
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <Button class="back-button" Clicked="@(() => OnButtonClicked())">
+                <Icon Name="IconName.ArrowLeft" />
+            </Button>
+            <h3 class="mb-0 ml-2">@categoryDetail.Code - @categoryDetail.Name</h3>
+            <AuthorizeView Roles="Administrator">
+                <Dropdown>
+                <DropdownToggle>
+                    <Icon Name="IconName.MoreVertical" />
+                    </DropdownToggle>
+                    <DropdownMenu>
+                        <DropdownItem Clicked="@(() => EditCategory(Id))">Bewerken</DropdownItem>
+                        <DropdownItem Clicked="@(() => ShowDeleteCategoryConfirmation(categoryDetail))">Verwijderen</DropdownItem>
+                    </DropdownMenu>
+                </Dropdown>
+            </AuthorizeView>
+        </div>
+        <AuthorizeView Roles="Administrator">
+            <div class="d-flex align-items-center">
+                <Button class="btn btn-primary ml-auto" Clicked="@AddOption">
+                    <Icon Name="IconName.Add" /> Voeg optie toe
+                </Button>            
+            </div>
+        </AuthorizeView>
+    </div>
+
+    <Table Striped Hoverable Responsive>
+        <TableHeader>
+            <TableRow>
+                <TableHeaderCell>Code optie</TableHeaderCell>
+                <TableHeaderCell>Naam optie</TableHeaderCell>
+                  <AuthorizeView Roles="Administrator">
+                <TableHeaderCell></TableHeaderCell>
+                </AuthorizeView>
+            </TableRow>
+        </TableHeader>
+        <TableBody>
+            @if (categoryDetail.Options.Count == 0)
+            {
+                <TableRow>
+                    <TableRowCell colspan="3">Geen opties gevonden</TableRowCell>
+                </TableRow>
+            }
+            else
+            {
+                @foreach (var option in categoryDetail.Options)
+                {
+                    <TableRow>
+                        <TableRowCell>@option.Code</TableRowCell>
+                        <TableRowCell>@option.Name</TableRowCell>
+                        <AuthorizeView Roles="Administrator">
+                            <TableRowCell TextAlignment="TextAlignment.End">
+                                <Dropdown>
+                                    <DropdownToggle>
+                                        <Icon Name="IconName.MoreVertical" />
+                                    </DropdownToggle>
+                                    <DropdownMenu>
+                                        <DropdownItem Clicked="@(() => EditOption(option.Id))">Bewerken</DropdownItem>
+                                        <DropdownItem Clicked="@(() => ShowDeleteOptionConfirmation(option))">Verwijderen</DropdownItem>
+                                   </DropdownMenu>
+                                </Dropdown>
+                            </TableRowCell>
+                        </AuthorizeView>
+                    </TableRow>
+                }
+            }
+        </TableBody>
+    </Table>  
+}
+
+<ConfirmationModal @ref="confirmationModal" Title="Bevestig verwijderen" OnConfirm="OnDeleteConfirmed" />
+

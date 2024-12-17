@@ -1,0 +1,36 @@
+@using Rise.Shared.Machineries
+@inject NavigationManager NavigationManager
+@page "/machines"
+@page "/"
+@inject HttpClient Http
+@attribute [Authorize]
+
+<PageTitle>Machines</PageTitle>
+<div class="d-flex justify-content-between align-items-center">
+    <h1>Machines</h1>
+    <AuthorizeView Roles="Administrator">
+        <Button Color="Color.Primary" Margin="Margin.Is2.FromTop" Clicked="@OnButtonClicked">
+            <Icon Name="IconName.Add" /> Voeg machine toe
+        </Button>
+    </AuthorizeView>
+</div>
+
+@if (machinery == null)
+{
+    @if (!string.IsNullOrEmpty(errorMessages))
+    {
+        <div class="alert alert-danger mt-3">@errorMessages</div>
+    }
+    else
+    {
+        <p>Laden...</p>
+    }
+
+}
+else
+{
+    <MachineryTable Machinery="@machinery" Query="@query" MachineryTypeDtos="@machineryTypeDtos" />
+}
+
+
+

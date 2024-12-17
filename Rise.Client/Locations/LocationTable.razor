@@ -1,0 +1,51 @@
+<Accordion>
+    @if (Locations == null)
+    {
+        @if (!string.IsNullOrEmpty(errorMessages))
+        {
+            <div class="alert alert-danger mt-3">@errorMessages</div>
+        }
+        else
+        {
+            <p>Laden...</p>
+        }
+    }
+    else
+    {
+        @foreach (var location in Locations)
+        {
+            <AccordionItem>
+                <AccordionHeader>
+                    <Heading Size="HeadingSize.Is5">
+                        <AccordionToggle>@location.Name</AccordionToggle>
+                    </Heading>
+                </AccordionHeader>
+                <AccordionBody>
+                    <div class="d-flex flex-wrap align-items-start gap-3">
+                        <div style="flex: 0 0 auto;">
+                            <Image src="@location.Image" alt="@location.Name" style="max-width: 300px; height: auto; border-radius: 8px;" />
+                        </div>
+                        <div style="flex: 1;">
+                            <h6>Locatiegegevens:</h6>
+                            <p>
+                                @location.Street @location.StreetNumber <br />
+                                @location.PostalCode, @location.City <br />
+                                @location.Country<br /> <br />
+                                @location.PhoneNumber <br />
+                                @location.Code <br />
+                            </p>
+                            <h6>Verkoopmedewerkers:</h6>
+                            @if (location.SalesPeople != null)
+                            {
+                                @foreach (var user in location.SalesPeople)
+                                {
+                                    <div>@user.Name - @user.Email - @user.PhoneNumber</div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </AccordionBody>
+            </AccordionItem>
+        }        
+    }
+</Accordion>

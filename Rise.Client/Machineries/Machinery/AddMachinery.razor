@@ -1,0 +1,145 @@
+@page "/machines/toevoegen"
+@using Rise.Client.Machineries.Components
+@attribute [Authorize(Roles = "Administrator")]
+
+<PageTitle>Machine toevoegen</PageTitle>
+
+<div class="machine-add-title" style="gap: 10px;">
+	<Button class="back-button" Clicked="@(() => OnButtonClicked())">
+		<Icon Name="IconName.ArrowLeft" />
+	</Button>
+	<h3 class="mb-0">Machine toevoegen</h3>
+</div>
+
+<div class="div-form">
+	<Card>
+		<CardBody>
+			@if (!string.IsNullOrEmpty(errorMessages))
+			{
+				<div class="alert alert-danger mt-3">@errorMessages</div>
+			}
+			<EditForm class="edit-form" Model="@Model" OnValidSubmit="@ValidateData">
+				<Validations @ref="@fluentValidations" HandlerType="typeof(FluentValidationHandler)" Mode="ValidationMode.Auto" Model="@Model">
+
+					<Validation Validator="@ValidateFilePicker">
+						<Field>
+							<FieldLabel RequiredIndicator>Afbeelding(en): </FieldLabel>
+							<FilePicker @ref="filePickerCustom"
+										Multiple="true"
+										Changed="@(args => OnFileUpload(args))"
+										ShowMode="FilePickerShowMode.List"
+										accept="image/*">
+								<FileTemplate Context="file">
+									<Div Flex="Flex.JustifyContent.Between">
+										<Div Flex="Flex.JustifyContent.Around">
+											<Div>
+												@if (file.File.Status == FileEntryStatus.Ready)
+												{
+													<Icon TextColor="TextColor.Primary" Name="IconName.FileUpload" class="icon" />
+												}
+												else if (file.File.Status == FileEntryStatus.Uploading)
+												{
+													<Icon TextColor="TextColor.Warning" Name="IconName.Bolt" class="icon" />
+												}
+												else if (file.File.Status == FileEntryStatus.Uploaded)
+												{
+													<Icon TextColor="TextColor.Success" Name="IconName.CheckCircle" class="icon" />
+												}
+												else if (file.File.Status == FileEntryStatus.Error)
+												{
+													<Icon TextColor="TextColor.Danger" Name="IconName.TimesCircle" class="icon" />
+												}
+											</Div>
+
+											<Div>
+												<Heading Size="HeadingSize.Is5">@file.File.Name</Heading>
+												<Paragraph>@FilePicker.GetFileSizeReadable(file.File)</Paragraph>
+											</Div>
+										</Div>
+									</Div>
+								</FileTemplate>
+								<ButtonsTemplate Context="buttonContext">
+									<Button @onclick="ShowDeleteConfirmation" Color="Color.Danger">
+										<Icon Name="IconName.Delete" />
+									</Button>
+								</ButtonsTemplate>
+							</FilePicker>
+							@if (imgerror)
+							{
+								<div class="errorimg">Er moet minstens 1 afbeelding geselecteerd zijn</div>
+
+							}
+						</Field>
+
+
+
+					</Validation>
+
+					<Validation>
+						<Field>
+							<FieldLabel RequiredIndicator>Serienummer: </FieldLabel>
+							<TextEdit @bind-Text="Model.SerialNumber" class="form-control" id="input-serialnumber" />
+							<ValidationMessage For="() => Model!.SerialNumber" />
+							<ValidationError />
+						</Field>
+					</Validation>
+
+					<Validation>
+						<Field>
+							<FieldLabel RequiredIndicator>Naam: </FieldLabel>
+							<TextEdit @bind-Text="Model.Name" class="form-control" id="input-name" />
+							<ValidationMessage For="() => Model!.Name" />
+							<ValidationError />
+						</Field>
+					</Validation>
+
+					<Validation>
+						<Field>
+							<FieldLabel RequiredIndicator>Beschrijving: </FieldLabel>
+							<TextEdit @bind-Text="Model.Description" class="form-control" id="input-description" />
+							<ValidationMessage For="() => Model!.Description" />
+							<ValidationError />
+						</Field>
+					</Validation>
+
+					<Validation>
+						<Field>
+							<FieldLabel RequiredIndicator>Brochuretekst: </FieldLabel>
+							<MemoEdit Rows="5" @bind-Text="Model.BrochureText" class="form-control" id="input-brochureText" />
+							<ValidationMessage For="() => Model!.BrochureText" />
+							<ValidationError />
+						</Field>
+					</Validation>
+
+					<Validation>
+						<Field>
+							<FieldLabel RequiredIndicator>Type: </FieldLabel>
+							@if (types == null)
+							{
+								<p>
+									<em>Loading...</em>
+								</p>
+							}
+							else
+							{
+								<Select TValue="int" @bind-SelectedValue="Model.TypeId" id="input-typeId">
+									<SelectItem Value="0">Selecteer een type</SelectItem>
+									@foreach (var type in types)
+									{
+										<SelectItem Value="@type.Id">@type.Name</SelectItem>
+									}
+
+								</Select>
+								<ValidationMessage For="() => Model!.TypeId" />
+							}
+							<ValidationError />
+						</Field>
+					</Validation>
+
+					<Button Type="ButtonType.Submit" class="btn btn-primary add-button">Toevoegen</Button>
+				</Validations>
+			</EditForm>
+		</CardBody>
+	</Card>
+</div>
+<ConfirmationModal @ref="confirmationModal" Title="Bevestig verwijderen" OnConfirm="OnDeleteConfirmed" />

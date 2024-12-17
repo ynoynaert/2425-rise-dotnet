@@ -1,0 +1,99 @@
+@page "/machines/{id:int}/bewerken/opties"
+@using Rise.Client.Machineries.Components
+@inject NavigationManager NavigationManager
+@attribute [Authorize(Roles = "Administrator")]
+
+<PageTitle>Opties bewerken</PageTitle>
+
+<div class="div-form">
+    @if (GroupedOptions is null)
+    {
+        @if (!string.IsNullOrEmpty(errorMessages))
+        {
+            <div class="alert alert-danger mt-3">
+                @errorMessages
+                <br/>
+                <Button class="back-button" Clicked="@(() => OnButtonClicked())">
+                    <Icon Name="IconName.ArrowLeft" />&nbsp;Ga terug
+                </Button>
+                </div>
+        }
+        else
+        {
+            <p><em>Loading...</em></p>
+        }
+    }
+    else
+    {
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <Button class="back-button" Clicked="@(() => OnButtonClicked())">
+                    <Icon Name="IconName.ArrowLeft" />
+                </Button>
+                <h3>Opties Bewerken</h3>
+            </div>
+            <Button @onclick="AddNewOption" Color="Color.Primary"> <Icon Name="IconName.Add" /> Nieuwe optie toevoegen</Button>
+        </div>
+        if (GroupedOptions.Any())
+        {
+            @foreach (var categoryGroup in GroupedOptions)
+            {
+                <h5 class="text-bold" id="category-name">@categoryGroup.Key - @categoryGroup.FirstOrDefault()?.Option.Category.Name</h5>
+
+
+                @foreach (var option in categoryGroup)
+                {
+
+                    <Card>
+                        <CardBody>
+
+                            @if (IsEditingOption(option))
+                            {
+                                <EditForm class="edit-form" Model="@model" OnValidSubmit="@SaveOption">
+                                    <Validations @ref="@fluentValidations" HandlerType="typeof(FluentValidationHandler)" Mode="ValidationMode.Auto" Model="@model">
+
+                                        <Validation>
+                                            <Field class="option-field-bewerken">
+                                                <h6 id="option-name">@option.Option.Code - @option.Option.Name</h6>
+                                                <NumericEdit TValue="decimal" @bind-Value="@model!.Price" class="form-control" id="price-input" Step="0.01M" />
+                                                <ValidationError />
+                                            </Field>
+                                        </Validation>
+                                        <Button Type="ButtonType.Submit" Color="Color.Primary" id="save-button">Opslaan</Button>
+                                        <Button @onclick="() => CancelEditOption()" class="options-cancel-button gray-button" id="cancel-edit-button">Annuleren</Button>
+                                    </Validations>
+                                      
+                                </EditForm>
+                            }
+                            else
+                            {
+                                <Field class="option-field">
+                                    <h6 id="option-name">@option.Option.Code - @option.Option.Name</h6>
+                                    <p id="option-price">Prijs: &euro;  @option.Price</p>
+
+                                    <Button @onclick="() => EditOption(option)" class="options-edit-button" id="edit-button" Color="Color.Secondary">Bewerken</Button>
+                                    <Button @onclick="() => ShowDeleteConfirmation(option)" Color="Color.Danger" Outline id="delete-button">Verwijderen</Button>
+
+                                </Field>
+                            }
+                        </CardBody>
+                    </Card>
+
+                    @if (!string.IsNullOrEmpty(errorMessages))
+                    {
+                        <div class="alert alert-danger mt-3">@errorMessages</div>
+                    }
+                    <br />
+                }
+            }
+        }
+        else
+        {
+            <p>Geen opties gevonden.</p>
+        }
+    }
+
+
+</div>
+
+<ConfirmationModal @ref="confirmationModal" Title="Bevestig verwijderen" OnConfirm="OnDeleteConfirmed" />

@@ -1,0 +1,202 @@
+@inherits Microsoft.AspNetCore.Components.ComponentBase
+
+@if (!string.IsNullOrEmpty(errorMessages))
+{
+    <div class="alert alert-danger mt-3">@errorMessages</div>
+}
+
+<div class="quote-page px-4 py-5">
+    <!-- Customer Information -->
+    <Card Class="mb-5 shadow-sm border-0">
+        <CardBody Class="bg-white p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <Heading Size="HeadingSize.Is4" Class="fw-bold text-dark">@ExcelModel.Customer.Name</Heading>
+                <Paragraph Class="fw-bold mb-0 text-muted">@ExcelModel.CurrentDate</Paragraph>
+            </div>
+            <Paragraph Class="mb-1">@ExcelModel.Customer.Street @ExcelModel.Customer.StreetNumber</Paragraph>
+            <Paragraph Class="mb-1">@ExcelModel.Customer.PostalCode @ExcelModel.Customer.City</Paragraph>
+            <Paragraph Class="mb-0">@ExcelModel.Customer.Country</Paragraph>
+        </CardBody>
+    </Card>
+
+    @if (ExcelModel.TopText != null)
+    {
+        if (!IsTopTextVisible)
+        {
+            <Card Class="mb-5 shadow-sm border-0">
+                <CardBody Class="bg-white p-4">
+                    <Heading Size="HeadingSize.Is5">Opmerkingen</Heading>
+                    <Paragraph>@ExcelModel.TopText</Paragraph>
+                </CardBody>
+            </Card>
+        }
+    }
+
+    @if (IsTopTextVisible)
+    {
+        <Card Class="mb-5 shadow-sm border-0">
+            <CardBody Class="bg-white p-4">
+                <EditForm class="edit-form" Model="@Model" OnValidSubmit="@ValidateTopText">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <Heading Size="HeadingSize.Is5">Tekst toevoegen</Heading>
+                        <div>
+                            <Button Type="ButtonType.Submit" Color="Color.Primary">Opslaan</Button>
+                            <Button Clicked="CloseTopTextEditor" Color="Color.Secondary">Annuleren</Button>
+                        </div>
+                    </div>
+                    <MemoEdit Rows="5" @bind-Text="Model.TopText" />
+                </EditForm>
+            </CardBody>
+        </Card>
+    }
+
+    <!-- Machine Information -->
+    <Card Class="mb-5 shadow-sm border-0">
+        <CardBody Class="bg-white p-4">
+            <div class="mb-4">
+                <Heading Size="HeadingSize.Is4" Class="fw-bold text-dark">@ExcelModel.MachineName</Heading>
+            </div>
+
+            <!-- Options Side by Side -->
+            <div class="row">
+                <!-- Factory Options -->
+
+                <div class="col-md-6 mb-5">
+                    <Heading Size="HeadingSize.Is5" Class="fw-bold text-dark mb-3">Fabrieksopties</Heading>
+                    @if (ExcelModel.MainOptions == null || !ExcelModel.MainOptions.Any())
+                    {
+                        <Paragraph>Geen basisopties voor deze machine</Paragraph>
+                    }
+                    else
+                    {
+
+                        @foreach (var category in ExcelModel.MainOptions)
+                        {
+                            <Table Responsive Borderless Class="table-wrapper ">
+                                <TableHeader ThemeContrast="ThemeContrast.Light">
+                                    <TableRow>
+                                        <TableHeaderCell>@category.Category</TableHeaderCell>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    @if (category.Options != null && category.Options.Any())
+                                    {
+                                        @foreach (var option in category.Options)
+                                        {
+                                            <TableRow>
+                                                <TableRowCell>@option</TableRowCell>
+                                            </TableRow>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <TableRow>
+                                            <TableRowCell Class="text-muted">Geen opties beschikbaar</TableRowCell>
+                                        </TableRow>
+                                    }
+                                </TableBody>
+                            </Table>
+                        }
+                    }
+                </div>
+
+                <!-- Dozer Options -->
+                <div class="col-md-6">
+                    <Heading Size="HeadingSize.Is5" Class="fw-bold text-dark mb-3">Dozer opties</Heading>
+                    @if (ExcelModel.QuoteOptions == null || !ExcelModel.QuoteOptions.Any())
+                    {
+                        <Paragraph>Geen opties op deze machine</Paragraph>
+                    }
+                    else
+                    {
+
+                        @foreach (var group in options)
+                        {
+                            <Table Responsive Borderless Class="table-wrapper ">
+                                <TableHeader ThemeContrast="ThemeContrast.Light">
+                                    <TableRow>
+                                        <TableHeaderCell>@group.FirstOrDefault()?.MachineryOption.Option.Category.Code - @group.Key</TableHeaderCell>
+                                        <TableHeaderCell Class="price-column">Prijs (€)</TableHeaderCell>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    @foreach (var option in group)
+                                    {
+                                        <TableRow>
+                                            <TableRowCell>@option.MachineryOption.Option.Code - @option.MachineryOption.Option.Name</TableRowCell>
+                                            <TableRowCell Class="price-column">€ @string.Format("{0:N2}", option.MachineryOption.Price)</TableRowCell>
+                                        </TableRow>
+                                    }
+                                </TableBody>
+                            </Table>
+                        }
+                    }
+                </div>
+            </div>
+
+            @if (ExcelModel.TradedMachineries == null || !ExcelModel.TradedMachineries.Any())
+            {
+            }
+            else
+            {
+                <Heading Size="HeadingSize.Is5" Class="fw-bold text-dark mb-3">Ingeruilde Machines</Heading>
+                @foreach(var trade in ExcelModel.TradedMachineries)
+				{
+                    <TradedMachineryRow Trade="@trade" />
+                }
+            }
+            
+
+            <!-- Totals -->
+            <div class="mt-5 border-top pt-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <Paragraph Class="fw-bold mb-0 text-dark">Totaal excl. BTW</Paragraph>
+                    <Paragraph Class="fw-bold mb-0 text-dark">€ @string.Format("{0:N2}", ExcelModel.TotalWithoutVat)</Paragraph>
+                </div>
+                <div class="d-flex justify-content-between align-items-center  mb-2">
+                    <Paragraph Class="fw-bold mb-0 text-dark">Totaal incl. BTW</Paragraph>
+                    <Paragraph Class="fw-bold mb-0 text-dark">€ @string.Format("{0:N2}", ExcelModel.TotalWithVat)</Paragraph>
+                </div>
+                <div class="d-flex justify-content-between align-items-center  mb-2">
+                    <Paragraph Class="fw-bold mb-0 text-dark">Waarde ingeruilde machines</Paragraph>
+                    <Paragraph Class="fw-bold mb-0 text-dark">- € @string.Format("{0:N2}", ExcelModel.TradedMachineries == null ? 0 : ExcelModel.TradedMachineries!.Sum(x => x.EstimatedValue))</Paragraph>
+                </div>
+                <div class="d-flex justify-content-between align-items-center  mb-2">
+                    <Paragraph Class="fw-bold mb-0 text-dark">Totaal incl. BTW na inruilen</Paragraph>
+                    <Paragraph Class="fw-bold mb-0 text-dark">€ @string.Format("{0:N2}", ExcelModel.TradedMachineries == null ? ExcelModel.TotalWithVat : ExcelModel.TotalWithVat - ExcelModel.TradedMachineries!.Sum(x => x.EstimatedValue))</Paragraph>
+                </div>
+            </div>
+        </CardBody>
+    </Card>
+
+    @if (ExcelModel.BottomText != null)
+    {
+        if (!IsBottomTextVisible)
+        {
+            <Card Class="mb-5 shadow-sm border-0">
+                <CardBody Class="bg-white p-4">
+                    <Heading Size="HeadingSize.Is5">Opmerkingen</Heading>
+                <Paragraph>@ExcelModel.BottomText</Paragraph>
+                </CardBody>
+            </Card>
+        }
+    }
+
+    @if (IsBottomTextVisible)
+    {
+        <Card Class="mb-5 shadow-sm border-0">
+            <CardBody Class="bg-white p-4">
+                <EditForm class="edit-form" Model="@Model" OnValidSubmit="@ValidateBottomText">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <Heading Size="HeadingSize.Is5">Tekst toevoegen</Heading>
+                        <div>
+                            <Button Type="ButtonType.Submit" Color="Color.Primary">Opslaan</Button>
+                            <Button Clicked="CloseBottomTextEditor" Color="Color.Secondary">Annuleren</Button>
+                        </div>
+                    </div>
+                    <MemoEdit Rows="5" @bind-Text="Model.BottomText" />
+                </EditForm>
+            </CardBody>
+        </Card>
+    }
+</div>

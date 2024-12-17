@@ -1,0 +1,27 @@
+﻿.quote-add-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.quote-add-title h3 {
+    flex-grow: 1;
+}
+
+::deep .table-wrapper {
+    width: 100%;
+    table-layout: auto;
+}
+
+::deep .table-wrapper th, .table-wrapper td {
+    padding: 8px 12px;
+    white-space: normal;
+    overflow: hidden;
+    text-align: left;
+}
+
+::deep .table-wrapper .price-column {
+    text-align: right;
+    white-space: nowrap;
+}

@@ -1,0 +1,59 @@
+﻿@page "/categorieën/{id:int}/bewerken"
+@inject NavigationManager NavigationManager
+@attribute [Authorize(Roles = "Administrator")]
+
+<PageTitle>Categorie bewerken</PageTitle>
+
+<div class="category-add-title">
+    <Button class="back-button" Clicked="@(() => OnButtonClicked())">
+        <Icon Name="IconName.ArrowLeft" />
+    </Button>
+    <h3>Categorie bewerken</h3>
+</div>
+
+<div class="div-form">
+    <Card>
+        <CardBody>
+            @if (Model == null)
+            {
+                @if (!string.IsNullOrEmpty(errorMessages))
+                {
+                    <div class="alert alert-danger mt-3">@errorMessages</div>
+                }
+                else
+                {
+                    <p>Laden...</p>
+                }
+            }
+            else
+            {
+                @if (!string.IsNullOrEmpty(errorMessages))
+                {
+                    <div class="alert alert-danger mt-3">@errorMessages</div>
+                }
+                <EditForm class="edit-form" Model="@Model" OnValidSubmit="@ValidateData">
+                    <Validations @ref="@fluentValidations" HandlerType="typeof(FluentValidationHandler)" Mode="ValidationMode.Auto" Model="@Model">
+                        <Validation>
+                            <Field>
+                                <FieldLabel RequiredIndicator>Naam</FieldLabel>
+                                <TextEdit @bind-Text="@Model.Name" id="input-name" />
+                                <ValidationMessage For="() => Model!.Name" />
+                                <ValidationError />
+                            </Field>
+                        </Validation>
+                        
+                        <Validation>
+                            <Field>
+                                <FieldLabel RequiredIndicator>Code</FieldLabel>
+                                <TextEdit @bind-Text="@Model.Code" id="input-code" />
+                                <ValidationMessage For="() => Model!.Code" />
+                                <ValidationError />
+                            </Field>
+                        </Validation>
+                        <Button Type="ButtonType.Submit" class="btn btn-primary add-button">Bewerken</Button>
+                    </Validations>
+                </EditForm>
+            }
+        </CardBody>
+    </Card>
+</div>

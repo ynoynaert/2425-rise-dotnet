@@ -1,0 +1,25 @@
+﻿.filters {
+    min-width: 300px;
+    background-color: #f9fafb;
+    border: none;
+    border-radius: 5px;
+    height: 35px;
+    color: black;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    padding: 5px;
+}
+
+.filters:hover {
+    background-color: #e9ecef;
+}
+
+.pagination {
+    justify-content: end;
+    margin: auto;
+}
+
+.filters-box {
+    display: inline-flex;
+    flex-wrap: wrap;
+}

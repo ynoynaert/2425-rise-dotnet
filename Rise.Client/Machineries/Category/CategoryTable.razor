@@ -1,0 +1,52 @@
+﻿@page "/categorieën"
+@inject NavigationManager NavigationManager
+@using Rise.Client.Machineries.Components
+@attribute [Authorize]
+
+<PageTitle>Categorieën - opties</PageTitle>
+
+<div class="headerBox">
+    <h1>Categorieën - opties</h1>
+    <div class="d-flex align-items-center" style="gap: 10px;">
+    <AuthorizeView Roles="Administrator">
+        <Button Color="Color.Primary" Margin="Margin.Is2.FromTop" Clicked="@OnButtonClicked" class="filters">
+            <Icon Name="IconName.Add" /> Voeg categorie toe
+        </Button>
+            <Button class="filters" Color="Color.Primary" Margin="Margin.Is2.FromTop" Clicked="@OnPriceUpdateButtonClicked">
+            <Icon Name="IconName.Edit" /> Update prijzen
+        </Button>
+    </AuthorizeView>
+    </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center">
+    <input @bind="Query!.Search" @bind:after="PerformFilter" class="filters textfield" placeholder="Zoek een categorie of optie" />
+    <Button Color="Color.Secondary" Clicked="@ToggleExpandAll" class="filters">
+        <Icon Name="@(ExpandAll ? IconName.ExpandLess : IconName.ExpandMore)" />
+    </Button>
+</div>
+
+
+@if (Categories == null)
+{
+    <p><em>Laden...</em></p>
+}
+else
+{
+    <Table Hoverable Responsive>
+        <TableBody>
+            @foreach (var Category in Categories)
+            {
+                <TableRowGroup Title="@($"{Category.Code} - {Category.Name}")" DoubleClicked="(() => OnButtonDetailClicked(Category.Id))" Expanded="ExpandAll">
+                    @foreach (var option in Category.Options)
+                    {
+                        <TableRow>
+                            <TableRowCell>@option.Code - @option.Name</TableRowCell>
+                        </TableRow>
+                    }
+                </TableRowGroup>
+            }
+        </TableBody>
+    </Table>
+
+}

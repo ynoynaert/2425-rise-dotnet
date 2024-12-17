@@ -1,0 +1,54 @@
+﻿.category-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+::deep .category-buttons-button {
+    flex-grow: 1;
+    padding: 10px 20px;
+    text-align: center;
+}
+
+::deep .grey {
+    background-color: lightgrey;
+}
+
+    ::deep .grey:hover {
+        background-color: dimgrey;
+    }
+
+.clickable:hover {
+    cursor: pointer !important;
+    background-color: #fae588 !important;
+}
+
+.table-striped {
+    width: 100%;
+    background-color: #f9fafb;
+    border: none;
+}
+
+
+    .table-striped th {
+        background-color: #fff;
+    }
+
+    .table-striped tbody tr {
+        border-bottom: 1px solid #ddd;
+    }
+
+    .table-striped tr:nth-child(odd) {
+        background-color: #f9fafb;
+    }
+
+    .table-striped tr:nth-child(even) {
+        background-color: #fff;
+    }
+
+.text-right {
+    text-align: right;
+}

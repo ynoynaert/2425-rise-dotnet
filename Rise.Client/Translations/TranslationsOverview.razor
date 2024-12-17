@@ -1,0 +1,101 @@
+﻿@page "/vertalingen/overzicht"
+@inject NavigationManager NavigationManager
+@inject INotificationService NotificationService
+@attribute [Authorize(Roles = "Administrator")]
+
+<PageTitle>Goedgekeurde vertalingen</PageTitle>
+
+<Div Class="d-flex align-items-center">
+    <Button Class="back-button me-2" Clicked="@(() => OnButtonClicked())">
+        <Icon Name="IconName.ArrowLeft" />
+    </Button>
+    <Heading>Goedgekeurde vertalingen</Heading>
+</Div>
+
+@if (Translations == null)
+{
+    @if (!string.IsNullOrEmpty(errorMessages))
+    {
+        <div class="alert alert-danger mt-3">@errorMessages</div>
+    }
+    else if(isLoading
+    )
+    {
+        <p>Laden...</p>
+    }
+}
+else
+{
+
+    <Div>
+        <input @bind="Query!.Search" @bind:after="PerformFilter" class="filters textfield" placeholder="Zoek een vertaling" />
+    </Div>
+
+    <Table Striped Hoverable Responsive>
+        <TableHeader>
+            <TableRow>
+                <TableHeaderCell>Tekst</TableHeaderCell>
+                <TableHeaderCell>Vertaling</TableHeaderCell>
+                <TableHeaderCell>Laatst aangepast door</TableHeaderCell>
+                <TableHeaderCell></TableHeaderCell>
+            </TableRow>
+        </TableHeader>
+        <TableBody>
+            @if (Translations == null || !Translations.Any())
+            {
+                <TableRow>
+                    <TableRowCell Colspan="4" class="text-center"><em>Geen vertalingen gevonden</em></TableRowCell>
+                </TableRow>
+            }
+            else
+            {
+                @foreach (var Translation in Translations)
+                {
+                    <TableRow class="table-row">
+                        <TableRowCell>@Translation.OriginalText</TableRowCell>
+                        <TableRowCell>
+                            @if (editingTranslationId == Translation.Id)
+                            {
+                                <InputText @bind-Value="Translation.TranslatedText" />
+                            }
+                            else
+                            {
+                                @Translation.TranslatedText
+                            }
+                        </TableRowCell>
+                        <TableRowCell>@Translation.UserEmail</TableRowCell>
+                        <TableRowCell TextAlignment="TextAlignment.End" class="text-center">
+                            <Dropdown>
+                                <DropdownToggle>
+                                    <Icon Name="IconName.MoreVertical" />
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                    @if (editingTranslationId == Translation.Id)
+                                    {
+                                        <DropdownItem Clicked="@(() => OnSaveButtonClicked(Translation))">Opslaan</DropdownItem>
+                                        <DropdownItem Clicked="@(() => OnCancelButtonClicked())">Annuleer</DropdownItem>
+                                    }
+                                    else
+                                    {
+                                        <DropdownItem Clicked="@(() => OnEditButtonClicked(Translation.Id))">Bewerken</DropdownItem>
+                                    }
+                                </DropdownMenu>
+                            </Dropdown>
+                         </TableRowCell>
+                    </TableRow>
+                }
+            }
+        </TableBody>
+    </Table>
+
+    <div class="pagination">
+        <Blazorise.Pagination ItemsPerPage="@Query!.PageSize" @bind-CurrentPage="Query.PageNumber">
+            <PaginationItem Disabled="@isPreviousDisabled">
+                <PaginationLink Clicked="OnPreviousPage">Vorige</PaginationLink>
+            </PaginationItem>
+            <PaginationItem Disabled="@isNextDisabled">
+                <PaginationLink Clicked="OnNextPage">Volgende</PaginationLink>
+            </PaginationItem>
+        </Blazorise.Pagination>
+    </div>
+}

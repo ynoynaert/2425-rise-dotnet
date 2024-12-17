@@ -1,0 +1,47 @@
+﻿.div-form ::deep .card {
+    background-color: #EDEDED;
+    border: none;
+}
+
+.machine-add-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .machine-add-title h3 {
+        flex-grow: 1;
+    }
+
+::deep .back-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+}
+
+.div-form {
+    margin: 10px;
+}
+
+.card {
+    padding: 20px;
+}
+
+.edit-form ::deep .error-summary {
+    margin-top: 15px;
+}
+::deep .blazored-typeahead.valid.modified {
+    border-color: lightgray;
+}
+::deep .blazored-typeahead__active-item {
+    background-color: transparent;
+    border-color: transparent;
+    color: #000;
+}
+
+::deep .blazored-typeahead {
+    background-color: #fff;
+    border-color:lightgray;
+    color: #000;
+}

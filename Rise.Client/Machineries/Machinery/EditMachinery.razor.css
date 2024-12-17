@@ -1,0 +1,40 @@
+﻿﻿.div-form ::deep .card {
+    background-color: #EDEDED;
+    border: none;
+}
+
+.div-form {
+    margin: 10px;
+}
+
+.machine-edit-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .machine-edit-title h3 {
+        flex-grow: 1;
+    }
+
+::deep .back-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+}
+
+.card {
+    padding: 20px;
+}
+
+.error-summary {
+    margin: 10px 0;
+}
+
+.errorimg {
+    width: 100%;
+    margin-top: .25rem;
+    font-size: .875em;
+    color: #dc3545;
+}

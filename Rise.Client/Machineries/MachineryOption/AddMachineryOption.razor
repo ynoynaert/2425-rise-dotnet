@@ -1,0 +1,79 @@
+@page "/machines/{MachineryId:int}/bewerken/nieuwe/opties"
+@using Rise.Shared.Machineries
+@attribute [Authorize(Roles = "Administrator")]
+
+<PageTitle>Nieuwe optie toevoegen</PageTitle>
+
+<div class="machine-add-title" style="gap: 10px;">
+	<Button class="back-button" Clicked="@(() => OnButtonClicked())">
+		<Icon Name="IconName.ArrowLeft" />
+	</Button>
+	<h3 class="mb-0">Nieuwe optie toevoegen</h3>
+</div>
+
+<div class="div-form">
+	<Card>
+		<CardBody>
+			@if (!string.IsNullOrEmpty(errorMessages))
+			{
+				<div class="alert alert-danger mt-3 errorMessages">@errorMessages</div>
+			}
+			<EditForm class="edit-form" Model="@model" OnValidSubmit="@ValidateData">
+				<Validations @ref="@fluentValidations" HandlerType="typeof(FluentValidationHandler)" Mode="ValidationMode.Auto" Model="@model">
+
+						<Field>
+							<FieldLabel RequiredIndicator>Optie: </FieldLabel>
+							@if (beschikbareOpties is null)
+							{
+								<p><em>Loading...</em></p>
+							}
+							else
+							{
+								<div id="typeahead-input-container">
+								<BlazoredTypeahead TItem="OptionDto.Detail"
+												   TValue="int?"
+												   SearchMethod="SearchOptions"
+												   @bind-Value="selectedOptionId"
+												   Placeholder="Selecteer een optie"
+												   ConvertMethod="ConvertOption">
+									<SelectedTemplate Context="optionId">
+										@{
+											var selectedOption = LoadOption(optionId);
+											<text>@selectedOption?.Code - @selectedOption?.Name</text>
+										}
+									</SelectedTemplate>
+
+									<ResultTemplate Context="option">
+										<SelectGroup Label="@($"{option.Category.Code} - {option.Category.Name}")">
+											<SelectItem Value="@option.Id">@option.Code - @option.Name</SelectItem>
+										</SelectGroup>
+									</ResultTemplate>
+									<NotFoundTemplate Context="item">
+										Sorry, er zijn geen opties gevonden met deze naam
+									</NotFoundTemplate>
+
+								</BlazoredTypeahead>
+								</div>
+
+							}
+						</Field>
+
+
+					<Validation>
+						<Field>
+							<FieldLabel RequiredIndicator>Prijs: </FieldLabel>
+							<NumericEdit TValue="decimal" @bind-Value="model.Price" class="form-control" Step="0.01M" />
+							<ValidationMessage For="() => model.Price" class="validation-message" />
+							<ValidationError />
+						</Field>
+					</Validation>
+
+
+					<Button Type="ButtonType.Submit" class="btn btn-primary add-button">Toevoegen</Button>
+				</Validations>
+			</EditForm>
+
+
+		</CardBody>
+	</Card>
+</div>

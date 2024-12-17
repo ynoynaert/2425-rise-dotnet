@@ -1,0 +1,98 @@
+﻿@using Rise.Shared.Quotes
+
+<div class="filters-box">
+    <input @bind="Query!.Search" @bind:after="PerformFilter" class="filters textfield" placeholder="Zoek op naam of nummer" />
+
+    <div class="d-flex gap-2 datepickers-container mt-0">
+        <Addons>
+            <Addon AddonType="AddonType.Body">
+                <DatePicker Placeholder="Zoeken vanaf" @ref="@datePickerAfter" TValue="DateTime?" @bind-Date="Query.After" @bind-Date:after="PerformFilter" InputFormat="yyyy-MM-dd" DisplayFormat="yyyy-MM-dd" />
+            </Addon>
+            <Addon AddonType="AddonType.End">
+                <Button Color="Color.Secondary" Clicked="@(()=>datePickerAfter.ToggleAsync())">
+                    <Icon Name="IconName.CalendarDay" />
+                </Button>
+            </Addon>
+        </Addons>
+        <Addons>
+            <Addon AddonType="AddonType.Body">
+                <DatePicker Placeholder="Zoeken tot" @ref="@datePickerBefore" TValue="DateTime?" @bind-Date="Query.Before" @bind-Date:after="PerformFilter" InputFormat="yyyy-MM-dd" DisplayFormat="yyyy-MM-dd" />
+            </Addon>
+            <Addon AddonType="AddonType.End">
+                <Button Color="Color.Secondary" Clicked="@(()=>datePickerBefore.ToggleAsync())">
+                    <Icon Name="IconName.CalendarDay" />
+                </Button>
+            </Addon>
+        </Addons>
+    </div>
+
+    <select @bind="Query.SortBy" @bind:after="PerformFilter" class="filters" aria-label="Sorting">
+        <option value="" selected>Sorteren op</option>
+        <option value="quotenumber">Offertenummer</option>
+        <option value="date">Datum</option>
+        <option value="customername">Klantnaam</option>
+        <option value="machineryname">Machinenaam</option>
+    </select>
+
+    <select @bind="Query.Status" @bind:after="PerformFilter" class="filters">
+        <option value="" selected>Alle statusen</option>
+        <option value="Verouderd">Verouderd</option>
+        <option value="In afwachting">In afwachting</option>
+        <option value="Goedgekeurd">Goedgekeurd</option>
+    </select>
+
+    <div class="filters">
+        <input type="checkbox" @bind="Query.IsDescending" @bind:after="PerformFilter" />
+        <label for="sortOrder">Aflopend</label>
+    </div>
+</div>
+
+<Table Striped Hoverable Responsive>
+    <TableHeader>
+        <TableRow>
+            <TableHeaderCell>Offertenummer</TableHeaderCell>
+            <TableHeaderCell>Machine</TableHeaderCell>
+            <TableHeaderCell>Datum</TableHeaderCell>
+            <TableHeaderCell>Klantnaam</TableHeaderCell>
+            <TableHeaderCell>Status</TableHeaderCell>
+        </TableRow>
+    </TableHeader>
+    <TableBody>
+        @if (Quotes!.Count() == 0)
+        {
+            <TableRow>
+                <TableRowCell colspan="5">Geen offertes gevonden</TableRowCell>
+            </TableRow>
+        }
+        else
+        {
+            @foreach (var quote in Quotes!)
+            {
+                <TableRow class='clickable' @onclick="() => NavigateToDetailPage(quote.QuoteNumber)">
+                    <TableRowCell>@quote.QuoteNumber</TableRowCell>
+                    <TableRowCell>@quote.Machinery.Name</TableRowCell>
+                    <TableRowCell>@quote.Date.ToString("dd/MM/yyyy")</TableRowCell>
+                    <TableRowCell>@quote.Customer.Name</TableRowCell>
+                    <TableRowCell>
+                        @(quote.IsApproved
+                            ? "Goedgekeurd"
+                            : quote.NewQuoteId is not 0
+                            ? "Verouderd"
+                            : "In afwachting")
+                    </TableRowCell>
+                </TableRow>
+            }
+        }
+    </TableBody>
+</Table>
+
+<div class="pagination">
+    <Blazorise.Pagination ItemsPerPage="@Query.PageSize" @bind-CurrentPage="Query.PageNumber">
+        <PaginationItem Disabled="@isPreviousDisabled">
+            <PaginationLink Clicked="OnPreviousPage">Vorige</PaginationLink>
+        </PaginationItem>
+        <PaginationItem Disabled="@isNextDisabled">
+            <PaginationLink Clicked="OnNextPage">Volgende</PaginationLink>
+        </PaginationItem>
+    </Blazorise.Pagination>
+</div>

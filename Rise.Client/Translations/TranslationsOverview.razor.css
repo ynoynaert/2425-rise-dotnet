@@ -1,0 +1,17 @@
+﻿.filters {
+    width: inherit;
+    background-color: #f9fafb;
+    border: none;
+    border-radius: 5px;
+    height: 35px;
+    color: black;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 5px;
+}
+
+.pagination {
+    justify-content: end;
+    margin: auto;
+}

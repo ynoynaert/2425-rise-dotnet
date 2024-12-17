@@ -1,0 +1,32 @@
+﻿@page "/offertes"
+@inject NavigationManager NavigationManager
+@attribute [Authorize]
+
+
+<PageTitle>Offertes</PageTitle>
+
+<div class="d-flex justify-content-between align-items-center">
+    <h1>Offertes</h1>
+    <AuthorizeView Roles="Verkoper">
+        <Button Color="Color.Primary" Margin="Margin.Is2.FromTop" Clicked="@OnCreateQuoteButtonClicked">
+            <Icon Name="IconName.Add" /> Offerte aanmaken
+        </Button>
+    </AuthorizeView>
+</div>
+
+
+@if(quotes == null)
+{
+    @if (!string.IsNullOrEmpty(errorMessages))
+    {
+            <div class="alert alert-danger mt-3">@errorMessages</div>
+    }
+    else
+    {
+         <p>Laden...</p>
+    }
+}
+else
+{
+    <QuoteTable Quotes="@quotes" />
+}

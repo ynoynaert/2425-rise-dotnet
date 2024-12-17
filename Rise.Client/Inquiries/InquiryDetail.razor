@@ -1,0 +1,72 @@
+﻿@page "/offertevoorstel/{Id}"
+@attribute [Authorize]
+
+<div class="div-form">
+    @if (Inquiry is null)
+    {
+        @if (isLoading)
+        {
+            <p>Loading...</p>
+        }
+        else if (!string.IsNullOrEmpty(errorLoading))
+        {
+            <div class="alert alert-danger mt-3">
+                @errorLoading
+                <br />
+                <Button Class="back-button" @onclick="OnButtonClicked">
+                    <Icon Name="IconName.ArrowLeft" />  Ga terug
+                </Button>
+            </div>
+        }
+    } 
+    else {
+        <div class="d-flex align-items-center justify-content-between" style="gap: 10px;">
+            <div class="quote-add-title">
+                <Button Class="back-button" @onclick="OnButtonClicked">
+                    <Icon Name="IconName.ArrowLeft" />
+                </Button>
+                <Heading Size="HeadingSize.Is3" Class="ms-2">
+                    Offertevoorstel @Inquiry?.Id
+                </Heading>
+            </div>
+        </div>
+
+        <div class="quote-page">
+            <div class="d-flex justify-content-between align-items-center">
+                <Heading Size="HeadingSize.Is5" Class="fw-bold">@Inquiry.CustomerName</Heading>
+            </div>
+            <br />
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <Heading Size="HeadingSize.Is5" Class="fw-bold">@Inquiry.Machinery.Name</Heading>
+            </div>
+            @if (Inquiry.InquiryOptions == null || !Inquiry.InquiryOptions.Any())
+            {
+                <Paragraph>Geen opties op deze machine</Paragraph>
+            }
+            else
+            {
+                @foreach (var group in options)
+                {
+                    <Table Responsive Borderless Class="table-wrapper">
+                        <TableHeader ThemeContrast="ThemeContrast.Light">
+                            <TableRow>
+                                <TableHeaderCell >@group.Key</TableHeaderCell>
+                                <TableHeaderCell Class="price-column">Prijs (€)</TableHeaderCell>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            @foreach (var option in group)
+                            {
+                                <TableRow>
+                                    <TableRowCell >@option.MachineryOption.Option.Name</TableRowCell>
+                                    <TableRowCell Class=" price-column">€ @string.Format("{0:N2}", option.MachineryOption.Price)</TableRowCell>
+                                </TableRow>
+                            }
+                        </TableBody>
+                    </Table>
+                }
+            }
+        </div>
+    }
+</div>

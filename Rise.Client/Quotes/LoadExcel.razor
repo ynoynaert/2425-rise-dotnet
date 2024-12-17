@@ -1,0 +1,32 @@
+﻿@page "/offertes/toevoegen"
+@attribute [Authorize(Roles = "Verkoper")]
+
+<PageTitle>Offerte toevoegen</PageTitle>
+
+<div class="quote-add-title" style="gap: 10px;">
+    <Button Class="back-button" @onclick="OnButtonClicked">
+        <Icon Name="IconName.ArrowLeft" />
+    </Button>
+    <h3 class="mb-0">Offerte toevoegen</h3>
+</div>
+
+@if (!string.IsNullOrEmpty(errorMessages))
+{
+    <div class="alert alert-danger mt-3">@errorMessages</div>
+}
+
+<LoadingIndicator @bind-Visible="@isLoading">
+    <div class="text-center mt-5">
+        <Card Class="mb-3" Style="max-width: 600px; margin: auto;">
+            <CardHeader>
+                <h4>Geen bestand geüpload</h4>
+            </CardHeader>
+            <CardBody>
+                <p>Upload een Excel-bestand om offertes te importeren.</p>
+                <Field>
+                    <FileEdit Filter=".xlsx" Changed="@OnImportExcelFile" ShowFileDropZone="true" Placeholder="Sleep hier uw bestand naartoe of klik om te selecteren" />
+                </Field>
+            </CardBody>
+        </Card>
+    </div>
+</LoadingIndicator>

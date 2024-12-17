@@ -1,0 +1,25 @@
+﻿.div-form ::deep .card {
+    background-color: #EDEDED;
+    border: none;
+}
+
+.type-add-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .type-add-title h3 {
+        flex-grow: 1;
+    }
+
+::deep .back-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+}
+
+.div-form {
+    margin: 10px;
+}

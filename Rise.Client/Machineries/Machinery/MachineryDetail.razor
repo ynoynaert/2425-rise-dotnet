@@ -1,0 +1,103 @@
+﻿@page "/machines/{id:int}"
+@using Rise.Client.Machineries.Components
+@attribute [Authorize]
+
+@if (Machine == null)
+{
+    @if (!string.IsNullOrEmpty(errorMessages))
+    {
+        <div class="alert alert-danger mt-3">
+            @errorMessages
+            <br/>
+            <Button class="back-button" Clicked="@(() => OnButtonClicked())">
+                <Icon Name="IconName.ArrowLeft" /> &nbsp;Ga terug
+            </Button>
+            </div>
+    }
+    else
+    {
+        <p>Laden...</p>
+    }
+}
+else
+{
+    <PageTitle>@Machine.Name</PageTitle>
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="machine-detail-title">
+            <Button class="back-button" Clicked="@(() => OnButtonClicked())">
+                <Icon Name="IconName.ArrowLeft" />
+            </Button>
+            <h3>@Machine.Name</h3>
+            <AuthorizeView Roles="Administrator" Context="adminContext">
+                <div>
+                    <Dropdown>
+                        <DropdownToggle>
+                            <Icon Name="IconName.MoreVertical" />
+                        </DropdownToggle>
+                        <DropdownMenu>
+                            <DropdownItem Clicked="@(() => OnButtonEditClicked(Machine.Id))">Machine bewerken</DropdownItem>
+                            <DropdownItem Clicked="@(() => OnOptionEditClicked(Machine.Id))">Opties bewerken</DropdownItem>
+                            <DropdownItem Clicked="@(() => ShowDeleteConfirmation())">Verwijderen</DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
+                </div>
+            </AuthorizeView>
+        </div>        
+    </div>
+
+
+    <div class="machine-detail">
+        <div class="machine-detail-left">
+            <div class="machine-detail-gallery">
+                <!-- Grote afbeelding -->
+                <div class="selected-image">
+                    <img src="@SelectedImage" alt="Selected Image" class="main-image" />
+                </div>
+
+                <!-- Miniaturen -->
+                <div class="thumbnail-gallery">
+                    @foreach (var img in Machine.Images)
+                    {
+                        <img src="@img.Url" alt="Thumbnail" class="thumbnail" @onclick="(() => SelectImage(img.Url))" />
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="machine-detail-right">
+            <h4 class="serialNumber"> <Span Class="text-bold">Serienummer: </Span>  @Machine.SerialNumber</h4>
+            <h4 class="type"> <Span Class="text-bold">Type:</Span> @Machine.Type.Name</h4>
+            <h4 class="description text-bold">Beschrijving:</h4>
+            <h5>@Machine.Description</h5>
+            <h4 class="brochureText text-bold">Brochuretekst:</h4>
+            <h5>@Machine.BrochureText</h5>
+            <h4 class="options-title text-bold">Opties:</h4>
+          
+            <div class="options-section">
+                @if (GroupedOptions != null && GroupedOptions.Any())
+                {
+                    <Table Borderless Responsive>
+                        <TableBody>
+                            @foreach (var Category in GroupedOptions)
+                            {
+                                <TableRowGroup Title="@($"{Category.Key} - {Category.FirstOrDefault()?.Option.Category.Name}")" Background="Background.White" >
+                                    @foreach (var option in Category)
+                                    {
+                                        <TableRow>
+                                            <TableRowCell class="option">@option.Option.Code - @option.Option.Name</TableRowCell>
+                                        </TableRow>
+                                    }
+                                </TableRowGroup>
+                            }
+                        </TableBody>
+                    </Table>
+                }
+                else
+                {
+                    <p>Geen opties voor deze machine</p>
+                }
+            </div>
+        </div>
+    </div>
+    
+}
+<ConfirmationModal @ref="confirmationModal" Title="Bevestig verwijderen" OnConfirm="OnDeleteConfirmed" />

@@ -1,0 +1,48 @@
+﻿﻿.div-form ::deep .card {
+    background-color: #EDEDED;
+    border: none;
+}
+
+.machine-add-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .machine-add-title h3 {
+        flex-grow: 1;
+    }
+
+::deep .back-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+}
+
+.div-form {
+    margin: 10px;
+}
+
+.card {
+    padding: 20px;
+}
+
+.edit-form ::deep .error-summary {
+    margin-top: 15px;
+}
+
+::deep .file-input {
+    background-color: #EDEDED;
+}
+
+::deep .icon {
+    margin-right: 20px;
+}
+
+.errorimg {
+    width: 100%;
+    margin-top: .25rem;
+    font-size: .875em;
+    color: #dc3545;
+}

@@ -1,0 +1,47 @@
+﻿.clickable:hover {
+    cursor: pointer !important;
+    background-color: #fae588 !important;
+}
+
+.filters {
+    width: inherit;
+    background-color: #f9fafb;
+    border: none;
+    border-radius: 5px;
+    height: 38px;
+    color: black;
+    margin: 10px;
+    padding: 5px;
+}
+
+.datepicker {
+    width: inherit;
+    height: 38px;
+    margin: 10px;
+}
+
+.filters:hover {
+    background-color: #e9ecef;
+}
+
+.filters:first-child {
+    min-width: 250px;
+    margin-left: 0px !important;
+}
+
+.filters-box {
+    display: inline-flex;
+    flex-wrap: wrap;
+}
+
+.pagination {
+    justify-content: end;
+    margin: auto;
+}
+
+.datepickers-container {
+    gap: 1rem;
+    align-items: center;
+}
+
+

@@ -1,0 +1,43 @@
+﻿@using Rise.Shared.Inquiries
+
+<Table Striped Hoverable Responsive>
+    <TableHeader>
+        <TableRow>
+            <TableHeaderCell>Voorstelnummer</TableHeaderCell>            
+            <TableHeaderCell>Datum</TableHeaderCell>
+            <TableHeaderCell>Machine</TableHeaderCell>
+            <TableHeaderCell>Klantnaam</TableHeaderCell>
+        </TableRow>
+    </TableHeader>
+    <TableBody>
+        @if (Inquiries!.Count() == 0)
+        {
+            <TableRow>
+                <TableRowCell colspan="4">Geen offertevoorstellen gevonden</TableRowCell>
+            </TableRow>
+        }
+        else
+        {
+            @foreach (var inquiry in Inquiries!)
+            {
+                <TableRow class='clickable' @onclick="() => NavigateToDetailPage(inquiry.Id)">
+                    <TableRowCell>@inquiry.Id</TableRowCell>
+                    <TableRowCell>@inquiry.CreatedAt.ToString("dd/MM/yyyy")</TableRowCell>
+                    <TableRowCell>@inquiry.Machinery.Name</TableRowCell>
+                    <TableRowCell>@inquiry.CustomerName</TableRowCell>
+                </TableRow>
+            }
+        }
+    </TableBody>
+</Table>
+
+@* <div class="pagination">
+    <Blazorise.Pagination ItemsPerPage="@Query.PageSize" @bind-CurrentPage="Query.PageNumber">
+        <PaginationItem Disabled="@isPreviousDisabled">
+            <PaginationLink Clicked="OnPreviousPage">Vorige</PaginationLink>
+        </PaginationItem>
+        <PaginationItem Disabled="@isNextDisabled">
+            <PaginationLink Clicked="OnNextPage">Volgende</PaginationLink>
+        </PaginationItem>
+    </Blazorise.Pagination>
+</div> *@

@@ -1,0 +1,37 @@
+﻿.clickable:hover {
+    cursor: pointer !important;
+    background-color: #fae588 !important;
+}
+
+.filters {
+    width: inherit;
+    background-color: #f9fafb;
+    border: none;
+    border-radius: 5px;
+    height: 35px;
+    color: black;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 5px;
+}
+
+.filters:hover{
+    background-color: #e9ecef;
+
+}
+
+.filters:first-child{
+    min-width: 250px;
+    margin-left: 0px !important;
+}
+
+.filters-box{
+    display: inline-flex;
+    flex-wrap: wrap;
+}
+
+.pagination {
+    justify-content: end;
+    margin: auto;
+}

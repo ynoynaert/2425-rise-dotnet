@@ -1,0 +1,9 @@
+﻿.text-right {
+    text-align: right;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem; /* Adjust spacing between buttons if necessary */
+}

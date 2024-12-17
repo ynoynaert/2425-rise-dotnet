@@ -1,0 +1,22 @@
+﻿::deep .table-wrapper {
+    width: 100%;
+    table-layout: auto; 
+}
+
+    ::deep .table-wrapper th, .table-wrapper td {
+        padding: 8px 12px;
+        white-space: normal;
+        overflow: hidden; 
+        text-align: left;
+    }
+
+    ::deep .table-wrapper .price-column {
+        text-align: right;
+        white-space: nowrap; 
+    }
+
+.main-image {
+    width: 100%;
+    max-height: 200px;
+    object-fit: contain;
+}

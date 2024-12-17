@@ -1,0 +1,92 @@
+﻿@page "/verkopers/toevoegen"
+@attribute [Authorize(Roles = "Administrator")]
+
+<PageTitle>Verkoper aanmelden</PageTitle>
+
+<div class="add-title" >
+	<Button class="back-button" Clicked="@(() => OnButtonClicked())">
+		<Icon Name="IconName.ArrowLeft" />
+	</Button>
+	<h3 class="mb-0">Verkoper aanmelden</h3>
+</div>
+
+<div class="div-form">
+	<Card>
+		<CardBody>
+			@if (!string.IsNullOrEmpty(errorMessages))
+            {
+                <div class="alert alert-danger mt-3">@errorMessages</div>
+            }
+			<EditForm class="edit-form" Model="@Model" OnValidSubmit="@ValidateData">
+				<Validations @ref="@fluentvalidations" HandlerType="typeof(FluentValidationHandler)" Mode="ValidationMode.Auto" Model="@Model">
+					<Validation>
+						<Field>
+                            <FieldLabel RequiredIndicator>Naam: </FieldLabel>
+							<TextEdit @bind-Text="Model.Name" class="form-control" data-testid="form-name" />
+							<ValidationMessage For="() => Model!.Name" />
+							<ValidationError />
+                        </Field>
+					</Validation>
+					<Validation>
+						<Field>
+							<FieldLabel RequiredIndicator>Email: </FieldLabel>
+							<TextEdit @bind-Text="Model.Email" class="form-control" data-testid="form-email" />
+							<ValidationMessage For="() => Model!.Email" />
+							<ValidationError />
+						</Field>
+					</Validation>
+					<Validation>
+						<Field>
+							<FieldLabel RequiredIndicator>Telefoonnummer: </FieldLabel>
+							<TextEdit @bind-Text="Model.PhoneNumber" class="form-control" data-testid="form-phonenr" />
+							<ValidationMessage For="() => Model!.PhoneNumber" />
+							<ValidationError />
+						</Field>
+					</Validation>
+					<Validation>
+						<Field>
+							<FieldLabel RequiredIndicator>Vestiging: </FieldLabel>
+							@if (Locations == null)
+							{
+								<p>
+									<em>Loading...</em>
+								</p>
+							}
+							else
+							{
+								<Select TValue="int" @bind-SelectedValue="Model.LocationId" id="input-typeId">
+									<SelectItem Value="0">Selecteer een locatie</SelectItem>
+									@foreach (var location in Locations)
+									{
+										<SelectItem Value="@location.Id">@location.Name</SelectItem>
+									}
+
+								</Select>
+								<ValidationMessage For="() => Model!.LocationId" />
+							}
+							<ValidationError />
+						</Field>
+					</Validation>
+					<Validation>
+						<Field>
+							<FieldLabel RequiredIndicator>Wachtwoord: </FieldLabel>
+							<TextEdit Role="TextRole.Password" @bind-Text="Model.Password" class="form-control" data-testid="form-pswd" />
+							<ValidationMessage For="() => Model!.Password" />
+							<ValidationError />
+						</Field>
+					</Validation>
+					<Validation>
+						<Field>
+							<FieldLabel RequiredIndicator>Wachtwoord bevestigen: </FieldLabel>
+							<TextEdit Role="TextRole.Password" @bind-Text="Model.PasswordConfirmation" class="form-control" data-testid="form-pswdconfirm" />
+							<ValidationMessage For="() => Model!.PasswordConfirmation" />
+							<ValidationError />
+						</Field>
+					</Validation>
+
+					<Button Type="ButtonType.Submit" class="btn btn-primary add-button">Account aanmaken</Button>
+				</Validations>
+			</EditForm>
+		</CardBody>
+	</Card>
+</div>

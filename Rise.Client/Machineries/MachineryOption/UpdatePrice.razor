@@ -1,0 +1,51 @@
+﻿@page "/opties/prijs-bewerken"
+@attribute [Authorize(Roles = "Administrator")]
+
+<PageTitle>Prijzen bewerken</PageTitle>
+
+<div class="d-flex align-items-center justify-content-between" style="gap: 10px;">
+    <div class="d-flex align-items-center option-update-title" style="gap: 10px;">
+        <Button Class="back-button" @onclick="OnButtonClicked">
+            <Icon Name="IconName.ArrowLeft" />
+        </Button>
+        <Heading Size="HeadingSize.Is3" Class="ms-2">
+            Update prijzen
+        </Heading>
+    </div>
+    <div class="d-flex align-items-center" style="gap: 10px;">
+        @if (priceUpdateList!.Count() != 0)
+        {
+            <Button Clicked="OnAcceptPricesButtonClicked" Color="Color.Primary" Class=".btn-primary d-flex align-items-center">
+                <Icon Name="IconName.Check" Class="me-2" /> Prijsaanpassingen accepteren
+            </Button>
+        }
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(errorMessages))
+{
+    <div class="alert alert-danger mt-3">@errorMessages</div>
+}
+
+@if (priceUpdateList!.Count() == 0)
+{
+<LoadingIndicator @bind-Visible="@isLoading">
+    <div class="text-center mt-5">
+        <Card Class="mb-3" Style="max-width: 600px; margin: auto;">
+            <CardHeader>
+                <h4>Geen bestand geüpload</h4>
+            </CardHeader>
+            <CardBody>
+                <p>Upload een Excel-bestand om prijzen aan te passen.</p>
+                <Field>
+                    <FileEdit Filter=".xlsx" Changed="@OnImportExcelFile" ShowFileDropZone="true" Placeholder="Sleep hier uw bestand naartoe of klik om te selecteren" />
+                </Field>
+            </CardBody>
+        </Card>
+    </div>
+</LoadingIndicator>
+} 
+else if (!isLoading)
+{
+    <UpdatePriceOverview PriceUpdateList="priceUpdateList" />
+}

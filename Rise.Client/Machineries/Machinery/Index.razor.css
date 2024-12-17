@@ -1,0 +1,84 @@
+﻿.my-component {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.my-component ::deep .machin-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.my-component ::deep .machin-card-body {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    align-items: center;
+}
+
+.my-component ::deep .machin-card img {
+    max-width: 300px;
+    max-height: 150px;
+    width: auto;
+    height: auto;
+    margin: 10px 0;
+}
+
+.my-component ::deep .machin-card-body {
+    flex: 1;
+}
+
+.search-filter {
+    background-color: rgb(250, 251, 252);
+    border-color: rgb(223, 225, 230);
+    color: rgb(9, 30, 66);
+    cursor: text;
+    border-radius: 3px;
+    border-width: 2px;
+    border-style: solid;
+    box-sizing: border-box;
+    font-size: 14px;
+    transition: background-color 0.2s ease-in-out 0s, border-color 0.2s ease-in-out 0s;
+    line-height: 1.42857;
+    padding: 8px 6px;
+    height: 36px;
+    margin-bottom: 20px;
+}
+
+.search-filter:hover {
+    background-color: rgb(235, 236, 240);
+}
+
+.search-filter:focus {
+    background-color: rgb(255, 255, 255);
+    border-color: rgb(76, 154, 255);
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.pagination-item {
+    margin: 0 5px;
+}
+
+::deep .page-link {
+    color: black !important;
+}
+
+/*Zodat bij kleiner scherm foto boveaan komt*/
+@media (max-width: 1000px) {
+    .my-component ::deep .machin-card-body {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .my-component ::deep .machin-card img {
+        margin: 0;
+        max-width: 100%;
+    }
+}

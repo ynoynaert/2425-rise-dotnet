@@ -1,0 +1,26 @@
+﻿@page "/bestellingen"
+@inject NavigationManager NavigationManager
+@attribute [Authorize]
+
+<PageTitle>Bestellingen</PageTitle>
+
+<div class="d-flex justify-content-between align-items-center">
+    <h1>Bestellingen</h1>
+
+</div>
+
+@if (orders == null)
+{
+    @if (!string.IsNullOrEmpty(errorMessages))
+    {
+        <div class="alert alert-danger mt-3">@errorMessages</div>
+    }
+    else
+    {
+        <p>Laden...</p>
+    }
+}
+else
+{
+    <OrderTable Orders="@orders" />
+}

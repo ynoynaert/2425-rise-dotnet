@@ -1,0 +1,10 @@
+﻿::deep .no-button {
+    background-color: lightgrey;
+}
+
+::deep .no-button:hover {
+    background-color: dimgrey;
+}
+::deep .header-modal {
+    background-color: #FFCA1E;
+}

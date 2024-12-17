@@ -1,0 +1,94 @@
+﻿@page "/vertalingen"
+@inject NavigationManager NavigationManager
+@inject INotificationService NotificationService
+@attribute [Authorize(Roles = "Administrator")]
+
+<PageTitle>Vertalingen</PageTitle>
+
+<div class="d-flex flex-column flex-sm-row justify-content-between mb-4">
+    <Heading>Vertalingen</Heading>
+    <Button Color="Color.Primary" Clicked="@OnButtonClicked">
+        <Icon Name="IconName.AlignLeft" /> Goedgekeurde vertalingen
+    </Button>
+</div>
+
+@if (Translations == null)
+{
+    @if (!string.IsNullOrEmpty(errorMessages))
+    {
+        <div class="alert alert-danger mt-3">@errorMessages</div>
+    }
+    else if (isLoading)
+    {
+        <p>Laden...</p>
+    }
+}
+else
+{
+    <Table Striped Hoverable Responsive>
+        <TableHeader>
+            <TableRow>
+                <TableHeaderCell style="width: 45%;">Tekst</TableHeaderCell>
+                <TableHeaderCell style="width: 45%;">Vertaling</TableHeaderCell>
+                <TableHeaderCell style="width: 10%;"></TableHeaderCell>
+            </TableRow>
+        </TableHeader>
+        <TableBody>
+            @if (Translations == null || !Translations.Any())
+            {
+                <TableRow>
+                    <TableRowCell Colspan="3" class="text-center"><em>Geen vertalingen gevonden</em></TableRowCell>
+                </TableRow>
+            }
+            else
+            {
+                @foreach (var Translation in Translations)
+                {
+                    <TableRow class="table-row">
+                        <TableRowCell>@Translation.OriginalText</TableRowCell>
+                        <TableRowCell>
+                            @if (editingTranslationId == Translation.Id)
+                            {
+                                <InputText @bind-Value="Translation.TranslatedText" />
+                            }
+                            else
+                            {
+                                @Translation.TranslatedText
+                            }
+                        </TableRowCell>
+                        <TableRowCell class="text-center">
+                            <Dropdown>
+                                <DropdownToggle>
+                                    <Icon Name="IconName.MoreVertical" />
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                    @if (editingTranslationId == Translation.Id)
+                                    {
+                                        <DropdownItem Clicked="@(() => OnSaveButtonClicked(Translation))">Opslaan</DropdownItem>
+                                        <DropdownItem Clicked="@(() => OnCancelButtonClicked())">Annuleer</DropdownItem>
+                                    }
+                                    else
+                                    {
+                                        <DropdownItem Clicked="@(() => OnAcceptButtonClicked(Translation))">Accepteren</DropdownItem>
+                                        <DropdownItem Clicked="@(() => OnEditButtonClicked(Translation.Id))">Bewerken</DropdownItem>
+                                    }
+                                </DropdownMenu>
+                            </Dropdown>
+                        </TableRowCell>
+                    </TableRow>
+                }
+            }
+        </TableBody>
+    </Table>
+
+    <div class="pagination">
+        <Blazorise.Pagination ItemsPerPage="@Query!.PageSize" @bind-CurrentPage="Query.PageNumber">
+            <PaginationItem Disabled="@isPreviousDisabled">
+                <PaginationLink Clicked="OnPreviousPage">Vorige</PaginationLink>
+            </PaginationItem>
+            <PaginationItem Disabled="@isNextDisabled">
+                <PaginationLink Clicked="OnNextPage">Volgende</PaginationLink>
+            </PaginationItem>
+        </Blazorise.Pagination>
+    </div>
+}

@@ -1,0 +1,70 @@
+﻿@page "/offertes/{QuoteNumber}/opties"
+@attribute [Authorize(Roles = "Verkoper")]
+
+<PageTitle>Optie toevoegen</PageTitle>
+
+<div class="options-add-title" style="gap: 10px;">
+    <Button Class="back-button" @onclick="OnButtonClicked">
+        <Icon Name="IconName.ArrowLeft" />
+    </Button>
+    <Heading Size="HeadingSize.Is3">Opties toevoegen</Heading>
+</div>
+
+
+
+<div class="div-form">
+    @if (GroupedOptions is null)
+    {
+        @if (!string.IsNullOrEmpty(errorMessages))
+        {
+            <div class="alert alert-danger mt-3">@errorMessages</div>
+        }
+        else
+        {
+            <p><em>Loading...</em></p>
+        }
+    }
+    else if (GroupedOptions.Any())
+    {
+        @if (!string.IsNullOrEmpty(errorMessages))
+        {
+            <div class="alert alert-danger mt-3">@errorMessages</div>
+        }
+
+        <div class="d-flex justify-content-between align-items-center">
+            <input @bind="Query!.Search" @bind:after="PerformFilter" class="filters textfield" placeholder="Zoek een categorie of optie" />
+        </div>
+
+        <Accordion>
+            @foreach (var categoryGroup in GroupedOptions)
+            {
+                <AccordionItem Border="Border.RoundedZero">
+                    <AccordionHeader>
+                        <Heading Size="HeadingSize.Is3">
+                            <AccordionToggle>
+                                @categoryGroup.Key
+                            </AccordionToggle>
+                        </Heading>
+                    </AccordionHeader>
+                    <AccordionBody>
+                        @foreach (var option in categoryGroup)
+                        {
+                            <div class="option-item">
+                                <Check TValue="bool" @bind-Checked="optionSelectionStates[option.Id]">
+                                    <Label>@option.Option.Name</Label>
+                                    <Label>€ @option.Price</Label>
+                                </Check>
+                            </div>
+                        }
+                    </AccordionBody>
+                </AccordionItem>
+            }
+        </Accordion>
+        <Button Class="save-button" @onclick="OnSaveButtonClicked" Color="Color.Primary">Opties opslaan</Button>
+    }
+    else
+    {
+        <p>Geen opties gevonden.</p>
+    }
+   
+</div>

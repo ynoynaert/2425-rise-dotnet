@@ -1,0 +1,63 @@
+﻿@inherits Microsoft.AspNetCore.Components.ComponentBase
+
+<Table Striped Hoverable Responsive>
+    <TableHeader>
+        <TableRow>
+            <TableHeaderCell>Code</TableHeaderCell>
+            <TableHeaderCell>Optie</TableHeaderCell>
+            <TableHeaderCell>Serienummer</TableHeaderCell>
+            <TableHeaderCell>Machine</TableHeaderCell>
+            <TableHeaderCell>Prijs</TableHeaderCell>
+            <TableHeaderCell>Actie</TableHeaderCell>
+        </TableRow>
+    </TableHeader>
+    <TableBody>
+        @if (PriceUpdateList!.Count() == 0)
+        {
+            <TableRow>
+                <TableRowCell colspan="6">Geen prijsupdates ingelezen</TableRowCell>
+            </TableRow>
+        }
+        else
+        {
+            @foreach (var update in PriceUpdateList!)
+            {
+                <TableRow>
+                    <TableRowCell>@update.Option.Code</TableRowCell>
+                    <TableRowCell>@update.Option.Name</TableRowCell>
+                    <TableRowCell>@update.Machinery.SerialNumber</TableRowCell>
+                    <TableRowCell>@update.Machinery.Name</TableRowCell>
+                    <TableRowCell>
+                        @if (updateToEditId == update.Id)
+                        {
+                            <InputNumber TValue="decimal" @bind-Value="update.Price" />
+                        }
+                        else
+                        {
+                            <div>€ @string.Format(new System.Globalization.CultureInfo("nl-NL"), "{0:N2}", update.Price)</div>
+                        }
+                    </TableRowCell>
+                    <TableRowCell>
+                        <Dropdown>
+                            <DropdownToggle>
+                                <Icon Name="IconName.MoreVertical" />
+                            </DropdownToggle>
+                            <DropdownMenu>
+                                @if (updateToEditId == update.Id)
+                                {
+                                    <DropdownItem Clicked="@(() => SaveEdit(update))">Opslaan</DropdownItem>
+                                    <DropdownItem Clicked="@(() => CancelEdit())">Annuleer</DropdownItem>
+                                }
+                                else
+                                {
+                                    <DropdownItem Clicked="@(() => EditPriceUpdate(update.Id))">Bewerken</DropdownItem>
+                                    <DropdownItem Clicked="@(() => DeletePriceUpdate(update.Id))">Verwijderen</DropdownItem>
+                                }
+                            </DropdownMenu>
+                        </Dropdown>
+                    </TableRowCell>
+                </TableRow>
+            }
+        }   
+    </TableBody>
+</Table>

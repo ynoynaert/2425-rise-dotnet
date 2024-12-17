@@ -1,0 +1,96 @@
+@page "/offertes/{QuoteNumber}"
+@attribute [Authorize]
+@inject IJSRuntime JSRuntime
+
+
+<div class="div-form">
+    @if (isLoading)
+    {
+        <p>Loading...</p>
+    }
+    else if (!string.IsNullOrEmpty(errorLoading))
+    {
+        <div class="alert alert-danger mt-3">
+            @errorLoading
+            <br />
+            <Button Class="back-button" @onclick="OnButtonClicked">
+                <Icon Name="IconName.ArrowLeft" />  Ga terug
+            </Button>
+        </div>
+    }
+    else
+    {
+        @if (!string.IsNullOrEmpty(errorMessages))
+        {
+            <div class="alert alert-danger mt-3">@errorMessages</div>
+
+        }
+        <PageTitle>@ExcelModel?.QuoteNumber</PageTitle>
+
+        <div class="headerBox" style="gap: 10px;">
+            <div class="quote-add-title">
+                <Button Class="back-button" @onclick="OnButtonClicked">
+                    <Icon Name="IconName.ArrowLeft" />
+                </Button>
+                <Heading Size="HeadingSize.Is3" Class="ms-2">
+                    Offerte @ExcelModel?.QuoteNumber
+                </Heading>
+                @if (ExcelModel != null && ExcelModel.NewQuoteId != 0)
+                {
+                    <Badge Color="Color.Secondary">Verouderde versie</Badge>
+                }
+
+            </div>
+            <div class="boxButtons" style="gap: 10px;">
+                @if (ExcelModel != null)
+                {
+                    <AuthorizeView Roles="Verkoper">
+                        @if (ExcelModel.NewQuoteId is 0)
+                        {
+                            if (ExcelModel.IsApproved)
+                            {
+                                @if (!hasOrder)
+                                {
+                                    <Button Clicked="OnMakeOrderClicked" Color="Color.Primary" Class="d-flex align-items-center">
+                                        <Icon Name="IconName.Receipt" Class="me-2" /> Bestelling aanmaken
+                                    </Button>
+
+                                    <Button Clicked="OnAddTradedMachineryClicked" Color="Color.Primary" Class="d-flex align-items-center">
+                                        <Icon Name="IconName.Add" Class="me-2" /> Machine inruilen
+                                    </Button>
+                                }
+                                else
+                                {
+                                    <Button Clicked="OnSeeOrderClicked" Color="Color.Primary" Class="d-flex align-items-center">
+                                        <Icon Name="IconName.ArrowRight" Class="me-2" /> Ga naar bestelling
+                                    </Button>
+                                }
+
+                            }
+                            else
+                            {
+                                <Button Clicked="OnApproveClicked" Color="Color.Success" Class="d-flex align-items-center">
+                                    <Icon Name="IconName.Check" Class="me-2" /> Goedkeuren
+                                </Button>
+                                <Button Clicked="OnAddTextButtonClicked" Color="Color.Primary" Class="d-flex align-items-center">
+                                    <Icon Name="IconName.Add" Class="me-2" />
+                                    @(ExcelModel.TopText == null || ExcelModel.BottomText == null ? "Tekst toevoegen" : "Tekst bewerken")
+                                </Button>
+                                <Button Clicked="OnAddOptionsButtonClicked" Color="Color.Primary" Class="d-flex align-items-center">
+                                    <Icon Name="IconName.Add" Class="me-2" /> Opties toevoegen
+                                </Button>
+                               
+                            }
+                        }
+                    </AuthorizeView>
+                    <Button Clicked="OnGeneratePdfClicked" Color="Color.Primary" Class="d-flex align-items-center">
+                        <Icon Name="IconName.FilePdf" Class="me-2" /> PDF genereren
+                    </Button>
+                }
+            </div>
+        </div>
+
+        <CreateQuoteForm ExcelModel="ExcelModel" IsTopTextVisible="@IsTopTextVisible" IsBottomTextVisible="@IsBottomTextVisible" />
+    }
+</div>
+

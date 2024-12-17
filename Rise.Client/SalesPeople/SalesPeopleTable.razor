@@ -1,0 +1,31 @@
+﻿<Table Striped Hoverable Responsive>
+    <TableHeader>
+        <TableRow>
+            <TableHeaderCell>Naam</TableHeaderCell>
+            <TableHeaderCell>Email</TableHeaderCell>
+            <TableHeaderCell>Telefoonnummer</TableHeaderCell>
+            <TableHeaderCell>Vestiging</TableHeaderCell>
+        </TableRow>
+    </TableHeader>
+    <TableBody>
+        @if (SalesPeople!.Count() == 0)
+        {
+            <TableRow>
+                <TableRowCell colspan="4">Geen verkopers gevonden</TableRowCell>
+            </TableRow>
+        }
+        else
+        {
+            @foreach (var salesPerson in SalesPeople!)
+            {
+                <TableRow>
+                    <TableRowCell>@salesPerson.Name</TableRowCell>
+                    <TableRowCell>@salesPerson.Email</TableRowCell>
+                    <TableRowCell>@salesPerson.PhoneNumber</TableRowCell>
+                    <TableRowCell>@salesPerson.Location!.Name</TableRowCell>
+                </TableRow>
+            }
+        }
+    </TableBody>
+</Table>
+

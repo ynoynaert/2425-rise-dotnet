@@ -1,0 +1,55 @@
+﻿@page "/verkopers"
+@attribute [Authorize(Roles = "Administrator")]
+@using Rise.Shared.Locations
+
+<PageTitle>Verkopers</PageTitle>
+
+<div class="d-flex justify-content-between align-items-center">
+    <h1>Verkopers</h1>
+    <Button Color="Color.Primary" Margin="Margin.Is2.FromTop" Clicked="@OnSignUpSalesPersonClicked">
+        <Icon Name="IconName.Add" /> Verkoper aanmelden
+    </Button>
+</div>
+
+@if (salesPeople == null)
+{
+    @if (!string.IsNullOrEmpty(errorMessages))
+    {
+        <div class="alert alert-danger mt-3">@errorMessages</div>
+    }
+    else
+    {
+        <p>Laden...</p>
+    }
+}
+else
+{
+    <div class="filters-box">
+        <input @bind="Query!.Search" @bind:after="PerformFilter" class="filters textfield" placeholder="Zoek op email, naam of telefoon" />
+
+        <DropdownList TItem="LocationDto.Index" TValue="int"
+                      Data="@locations"
+                      TextField="@((item) => item.Name)"
+                      ValueField="@((item) => item.Id)"
+                      @bind-SelectedValues="@filteredLocations"
+                      @bind-SelectedValues:after="PerformFilter"
+                      SelectionMode="DropdownListSelectionMode.Checkbox"
+                      Color="Color.Light"
+                      MaxMenuHeight="200px">
+            Selecteer vestiging(en)
+        </DropdownList>
+    </div>
+
+    <SalesPeopleTable SalesPeople="@salesPeople" />
+
+    <div class="pagination">
+        <Blazorise.Pagination ItemsPerPage="@Query.PageSize" @bind-CurrentPage="Query.PageNumber">
+            <PaginationItem Disabled="@isPreviousDisabled">
+                <PaginationLink Clicked="OnPreviousPage">Vorige</PaginationLink>
+            </PaginationItem>
+            <PaginationItem Disabled="@isNextDisabled">
+                <PaginationLink Clicked="OnNextPage">Volgende</PaginationLink>
+            </PaginationItem>
+        </Blazorise.Pagination>
+    </div>
+}

@@ -1,0 +1,10 @@
+﻿.option-update-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+    .option-update-title h3 {
+        flex-grow: 1;
+    }

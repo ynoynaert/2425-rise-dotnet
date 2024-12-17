@@ -1,0 +1,61 @@
+@page "/bestellingen/{OrderNumber}"
+@inject IJSRuntime JSRuntime
+@using Rise.Client.Quotes
+@attribute [Authorize]
+
+ <div class="div-form">
+     @if (isLoading)
+     {
+         <p>Loading...</p>
+     }
+    else if (!string.IsNullOrEmpty(errorLoading))
+     {
+         <div class="alert alert-danger mt-3">
+             @errorLoading
+             <br/>
+            <Button Class="back-button" @onclick="OnButtonClicked">
+                <Icon Name="IconName.ArrowLeft" /> Ga terug
+            </Button>
+         </div>
+     }
+     else
+     {
+        if (!string.IsNullOrEmpty(errorMessages))
+        {
+            <div class="alert alert-danger mt-3">@errorMessages</div>
+        }
+        <PageTitle>@Order?.OrderNumber</PageTitle>
+        <div class="d-flex align-items-center justify-content-between" style="gap: 10px;">
+            <div class="order-add-title">
+                <Button Class="back-button" @onclick="OnButtonClicked">
+                    <Icon Name="IconName.ArrowLeft" />
+                </Button>
+                <Heading Size="HeadingSize.Is3" Class="ms-2">
+                    Bestelling @Order?.OrderNumber
+                </Heading>
+            </div>
+            <div class="d-flex align-items-center" style="gap: 10px;">
+                @if (Order is not null && Order.IsCancelled is false)
+                {
+                    <AuthorizeView Roles="Verkoper">
+                        <Button @onclick="OnCancelClicked" Color="Color.Danger" Outline Class="d-flex align-items-center">
+                            <Icon Name="IconName.MinusCircle" Class="me-2" /> Annuleer bestelling
+                        </Button>
+                    </AuthorizeView>
+                }
+                else
+                {
+                    <Heading Size="HeadingSize.Is5" class="d-flex align-items-center" TextColor="TextColor.Danger">
+                        Geannuleerd
+                    </Heading>
+                }
+                <Button Clicked="OnGeneratePdfClicked" Color="Color.Primary" Class="d-flex align-items-center">
+                    <Icon Name="IconName.FilePdf" Class="me-2" /> PDF genereren
+                </Button>
+
+            </div>
+        </div>
+
+        <CreateQuoteForm ExcelModel="QuoteModel" />
+     }
+ </div>

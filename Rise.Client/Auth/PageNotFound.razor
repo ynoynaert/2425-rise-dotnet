@@ -1,0 +1,38 @@
+﻿@page "/404"
+@using Blazorise
+@using Microsoft.AspNetCore.Components.Authorization
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<Layout>
+    <PageTitle>404 - Page Not Found</PageTitle>
+
+    <div class="text-center">
+        <Heading HeadingSize="HeadingSize.Is3">Oeps! Sorry, we kunnen deze pagina niet meer vinden</Heading>
+
+        @if (IsUserAuthenticated)
+        {
+            <Button Color="Color.Secondary" Margin="Margin.Is2" Clicked="@(() => Navigation.NavigateTo("/"))">
+                <Icon Name="IconName.AngleLeft" />
+                Ga naar de startpagina
+            </Button>
+        }
+        else
+        {
+            <Button Color="Color.Secondary" Margin="Margin.Is2" Clicked="@(() => Navigation.NavigateTo("authentication/login"))">
+                Log in
+                <Icon Name="IconName.AngleRight" />
+            </Button>
+        }
+    </div>
+</Layout>
+
+@code {
+    private bool IsUserAuthenticated;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        IsUserAuthenticated = authState.User.Identity?.IsAuthenticated ?? false;
+    }
+}
